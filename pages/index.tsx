@@ -3,6 +3,9 @@ import React, {useEffect, useState} from 'react'
 import Head from 'next/head'
 import {TweenLite, gsap} from 'gsap'
 import * as THREE from "three"
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+import { TextureLoader } from 'three'
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 import styles from '../styles/Home.module.scss'
 import Loading1 from './components/Loading1'
@@ -22,56 +25,59 @@ const Home: NextPage = () => {
   let mouse = new THREE.Vector2() 
   let camera: any
   let container: any
+  var cube : THREE.Mesh
   const scene = new THREE.Scene()
   setTimeout(() => setLoading(false), 1000);
   const webGLRender = () => {
     container = document.getElementById('webGLRender')
     const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true });
     container.appendChild( renderer.domElement )
-    let group = new Array();
-
-    const viewport = {
-      width : container.clientWidth,
-      height : container.clientHeight,
-      aspectRatio : container.clientWidth / container.clientHeight
-    }
-    
-    camera = new THREE.PerspectiveCamera( 40, viewport.aspectRatio, 0.1, 100 )
-    camera.position.set(0, 0, 3)
-    
-    const viewSize = {
-      distance : camera.position.z,
-      vFov : (camera.fov * Math.PI) / 180,
-      height : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z,
-      width : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z * viewport.aspectRatio,
-    }
-    const ambientLight = new THREE.AmbientLight( 0xaaaaff);
-    scene.add( ambientLight );
-
-    const light1 = new THREE.PointLight( 0xaaaaff, 1, 0 );
-    light1.position.set( 0, 0, 10 );
-    scene.add( light1 );
+    const viewport = { width : container.clientWidth, height : container.clientHeight, aspectRatio : container.clientWidth / container.clientHeight}    
+    camera = new THREE.PerspectiveCamera( 75, viewport.aspectRatio, 0.1, 100000 )
+    const viewSize = { distance : camera.position.z, vFov : (camera.fov * Math.PI) / 180, height : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z, width : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z * viewport.aspectRatio, }
+    camera.position.set(600, 100, 1000)
+    const controls = new OrbitControls( camera, renderer.domElement );
+    controls.enableRotate = true;
+    controls.update();
 
     setViewPort(viewport)
     setViewSize(viewSize)
-    renderer.setClearColor('#000000', 0)
+    renderer.setClearColor('#000000', 0.1)
     renderer.setSize(viewport.width, viewport.height)
     renderer.setPixelRatio(window.devicePixelRatio)
 
-    const Geo = new THREE.SphereGeometry( 0.01, 32, 16 );
-    const GeoMaterial = new THREE.MeshStandardMaterial( { color: 0xddddff, metalness:0.7, roughness:0, emissive:0xaaaaee, opacity:0, transparent:true } );
-    const Mesh = new THREE.Mesh(Geo, GeoMaterial)
-    scene.add(Mesh)
+    const texturloader = new TextureLoader();
+    const loader = new GLTFLoader();
+    const r = 'textures/logos/';
+    const urls = [ r + '1.png', r + '2.png', r + '3.png', r + '4.png', r + '5.png', r + '6.png' ];
+    const textureCube = new THREE.CubeTextureLoader().load( urls );
+    
+    loader.load( 'models/cube.glb', function ( gltf ) {
+      let geo         
+      const data = { color: 0x9999dd, envMap: textureCube, refractionRatio: 1.0 , };
+      // const _material = new THREE.MeshPhongMaterial(data);
+      const _material = new THREE.MeshBasicMaterial(data);
+      gltf.scene.traverse( function( object ) {
+        if ((object instanceof THREE.Mesh)) geo = object.geometry; 
+      });
+      cube = new THREE.Mesh(geo, _material)
+      cube.scale.set(100,100,100)
+      cube.position.set(600, 0, 0)
+      scene.add(cube);
+    }, undefined, function ( error ) {
+      console.error( error );
+    });
 
     animate();
     function animate() {
       requestAnimationFrame( animate );
+      
       renderer.render( scene, camera );    
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    window.addEventListener( 'resize', onWindowResize );
-    function onWindowResize() {
-      
+
+    window.addEventListener( 'resize', onWindowResize )
+    function onWindowResize() {      
       const viewport = {
         width : container.clientWidth, height : container.clientHeight,
         aspectRatio : container.clientWidth / container.clientHeight
@@ -110,7 +116,6 @@ const Home: NextPage = () => {
     mouse.y = -(cursorPos.y / viewport.height) * 2 + 1    
     let x = mouse.x * viewSize.width/2;
     let y = mouse.y * viewSize.height/2;
-    const newPos = new THREE.Vector3(x, y,0)
   })
 
   useEffect(() => {
@@ -164,10 +169,31 @@ const Home: NextPage = () => {
         </div>
         <SmoothScroll>
           <div className='content-wrapper mx-auto' style={{ color:foreColor}}>            
-            <section id='part-here' className='part-here w-full h-[100vh]' >
-              <div className='w-full h-[100vh]' style={{backgroundImage:'linear-gradient(0deg, rgba(0, 0, 0, 0.95) 10.0%, rgba(10, 10, 40, 0.65) 50.00%, rgba(20, 30, 90, 0.95) 90.0%)'}}>
+            <div id='webGLRender' className='fixed w-full h-full border border-green border-dotted top-0 left-0 pointer-events-none z-0'></div>
+            <section id='main' className='main w-full h-[100vh] relative z-1' >
+              <div className='w-full h-[100vh] max-w-[1440px] mx-auto'>
                 <div className='w-full h-full  flex items-center justify-center pt-12'>
-                  {/* <ColorAnimationText show={followerCursorShow} hidden={followerCursorHidden} avatarshow={avatarshow} avatarhide={avatarhide}/> */}
+                  <div className='details grid grid-cols-1 md:grid-cols-2 w-full'>
+                    <div className='fade-up-hidden relative overflow-hidden w-full h-[50vh]'>
+                      <div className='fade-up-show absolute top-0 left-0 w-full px-8'>
+                        <div className='title text-[50px] mb-8'>
+                          Humble Past
+                        </div>
+                        <div className='text-[30px]'>
+                          Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house. Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
+                        </div>
+                      </div>
+                      {/* <div className='fade-up-show absolute '>
+                        <div className='title text-[30px]'>
+                          Exciting Future
+                        </div>
+                        <div className='text-[20px]'>
+                          Our vision is clear, and our ambitions are great. We are always looking for the next revolutionizing investment opportunity. Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for any challenge.
+                        </div>
+                      </div> */}
+                    </div>
+                    
+                  </div>
                 </div>
               </div>
             </section>
@@ -178,7 +204,6 @@ const Home: NextPage = () => {
       <div className='hidden md:block'>
         <Cursor/>
       </div>
-      <div id='webGLRender' className='fixed w-full h-full border border-green border-dotted top-0 left-0 pointer-events-none'></div>
     </div>
   )
 }
