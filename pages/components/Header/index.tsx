@@ -37,7 +37,7 @@ const Header = () => {
 
   return (
     <>
-      <div id='header' className='fixed top-0 left-0 flex justify-between items-center w-full'>
+      <div id='header' className='relative top-0 left-0 flex justify-between items-center w-full z-10'>
         <div className='flex justify-between items-center w-full px-8 py-8 text-white mx-auto max-w-[1440px]'>
           <div className='h-auto flex items-center' id='77logo'>
             <button onMouseEnter={()=>followerCursorHidden()} onMouseLeave={()=>followerCursorShow()}>

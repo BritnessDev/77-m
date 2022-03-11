@@ -13,15 +13,54 @@ import Loading2 from './components/Loading2'
 import SmoothScroll from './components/SmoothScroll'
 import Cursor from './components/Cursor'
 import Header from './components/Header'
-
+import ColorAnimationText from './components/ColorAnimationText'
+import Slider from "react-slick"
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(true)
   const [viewport, setViewPort] = useState({width:0, height:0, aspectRatio:1})
   const [viewSize, setViewSize] = useState({distance:3, vFov:0, height:1, width:1})
   const [cursorPos, setPosition] = useState({x:0, y:0})
   const [uniforms, setUniforms] = useState({uTexture: {value: new THREE.Texture},uOffset: {value: new THREE.Vector2(0.0, 0.0)},uAlpha: {value: 1}})    
-  const bkColor = ['#000', '#3e0000', '#3e3e00', '#003e00', '#003e3e', '#00003e', '#3e3e3e', '#000']
-  const foreColor = '#dddddd'
+    
+  const settings = {
+    dots: false,
+    arrows:false,
+    infinite: true,
+    speed: 1500,
+    autoplay: true,
+    autoplaySpeed: 1500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    pauseOnHover: false,
+    centerMode: true,
+    cssEase: "linear",
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: false
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          initialSlide: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
   let mouse = new THREE.Vector2() 
   let camera: any
   let container: any
@@ -34,7 +73,6 @@ const Home: NextPage = () => {
     const fadeups = document.getElementsByClassName('fade-up-show')
     fadeupOrder ++
     fadeupOrder %=2
-    console.log(fadeupOrder)
     if (fadeups){
       TweenMax.to(fadeups[fadeupOrder], 0.1, {y:1000, opacity:0})
       TweenMax.to(fadeups[fadeupOrder], 2, {y:0, opacity:1, delay:0.1, ease: 'Power4.easeOut',})
@@ -49,7 +87,7 @@ const Home: NextPage = () => {
     const viewport = { width : container.clientWidth, height : container.clientHeight, aspectRatio : container.clientWidth / container.clientHeight}    
     camera = new THREE.PerspectiveCamera( 75, viewport.aspectRatio, 0.1, 100000 )
     const viewSize = { distance : camera.position.z, vFov : (camera.fov * Math.PI) / 180, height : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z, width : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z * viewport.aspectRatio, }
-    camera.position.set(600, 100, 1000)
+    camera.position.set(0, 30, 800)
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableRotate = true;
     controls.update();
@@ -60,32 +98,59 @@ const Home: NextPage = () => {
     renderer.setSize(viewport.width, viewport.height)
     renderer.setPixelRatio(window.devicePixelRatio)
 
+    const light = new THREE.PointLight(0xffffff, 2)
+    light.position.set(0, 600, -500)
+    scene.add(light)
+
     const texturloader = new TextureLoader();
     const loader = new GLTFLoader();
     const r = 'textures/logos/';
     const urls = [ r + '1.png', r + '2.png', r + '3.png', r + '4.png', r + '5.png', r + '6.png' ];
     const textureCube = new THREE.CubeTextureLoader().load( urls );
     
-    loader.load( 'models/cube.glb', function ( gltf ) {
-      let geo         
-      const data = { color: 0x9999dd, envMap: textureCube, refractionRatio: 1.0 , };
-      // const _material = new THREE.MeshPhongMaterial(data);
-      const _material = new THREE.MeshBasicMaterial(data);
-      gltf.scene.traverse( function( object ) {
-        if ((object instanceof THREE.Mesh)) geo = object.geometry; 
+    
+    let planes: THREE.Object3D<THREE.Event>[] | THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];  // just an array we can use to rotate the cubes
+    const loadManager = new THREE.LoadingManager();
+    const _loader = new THREE.TextureLoader(loadManager);
+
+    const materials = [
+      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/1.png')}),
+      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/2.png')}),
+      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/3.png')}),
+      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/4.png')}),
+      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/5.png')}),
+      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/6.png')}),
+    ];
+    
+    
+    loadManager.onLoad = () => {      
+      loader.load( 'models/cube.glb', function ( gltf ) {
+        console.log(materials)
+        let geo
+        gltf.scene.traverse( function( object ) {
+          if ((object instanceof THREE.Mesh)) geo = object.geometry; 
+        });
+        const cubeGeo = new THREE.BoxGeometry(1,1,1)
+        cube = new THREE.Mesh(cubeGeo, materials)
+        cube.scale.set(100,100,100)
+        cube.position.set(0, 0, 0)
+        scene.add(cube);
+      }, undefined, function ( error ) {
+        console.error( error );
       });
-      cube = new THREE.Mesh(geo, _material)
-      cube.scale.set(100,100,100)
-      cube.position.set(600, 0, 0)
-      scene.add(cube);
-    }, undefined, function ( error ) {
-      console.error( error );
-    });
+      // const cube = new THREE.Mesh(new THREE.BoxGeometry(400,400,400), materials);
+      // scene.add(cube);
+      
+    };
+
+    loadManager.onProgress = (urlOfLastItemLoaded, itemsLoaded, itemsTotal) => {
+      const progress = itemsLoaded / itemsTotal;
+      // progressBarElem.style.transform = `scaleX(${progress})`;
+    };
 
     animate();
     function animate() {
       requestAnimationFrame( animate );
-      
       renderer.render( scene, camera );    
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -117,38 +182,7 @@ const Home: NextPage = () => {
     if(typeof document !== "undefined"){
       webGLRender()
     }
-    setInterval(() => fadeUp(), 7000);
-  }, [])
-
-  useEffect(() => {
-    window.addEventListener("mousemove", (event: { clientX: number; clientY: number }) => {
-      setPosition({x:event.clientX, y:event.clientY})      
-    });
-  }, [])
-  
-  useEffect(() => {
-    mouse.x = (cursorPos.x / viewport.width) * 2 - 1
-    mouse.y = -(cursorPos.y / viewport.height) * 2 + 1    
-    let x = mouse.x * viewSize.width/2;
-    let y = mouse.y * viewSize.height/2;
-  })
-
-  useEffect(() => {
-    window.addEventListener('scroll', ()=>{
-      let scrollPercent = Math.floor(((document.documentElement.scrollTop || document.body.scrollTop) / ((document.documentElement.scrollHeight || document.body.scrollHeight) - document.documentElement.clientHeight)) * 100)
-      const body = document.getElementsByTagName('body')
-      const temp = ((scrollPercent<11)?11:scrollPercent)-11 
-      const newbgColor = bkColor[ Math.floor(temp/11) ]
-      gsap.to(body, 2, {backgroundColor:`${newbgColor}`})
-      if(scrollPercent>94){
-        const body = document.getElementById('contact_bg')
-        gsap.to(body, 2, {opacity:0.25})
-      }else{
-        const body = document.getElementById('contact_bg')
-        gsap.to(body, 2, {opacity:0})
-      }
-    });    
-  },[]); 
+  }, []) 
 
   const followerCursorHidden = () => {
     if(typeof window !== "undefined"){
@@ -176,45 +210,90 @@ const Home: NextPage = () => {
         <title>77 Media Holding</title>
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/default-favicon.ico" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
       </Head>
 
       <main className={styles.main}>        
         <div className='Loading-wrapper fixed top-0 left-0 w-full h-[100vh]' style={{background:'#000', zIndex:'10000', display:loading?'block':'none'}}>
           <Loading2/>
         </div>
-        <SmoothScroll>
-          <div className='content-wrapper mx-auto' style={{ color:foreColor}}>            
-            <div id='webGLRender' className='fixed w-full h-full top-0 left-0 pointer-events-none z-0'></div>
-            <section id='main' className='main w-full h-[100vh] relative z-1' >
-              <div className='w-full h-[100vh] max-w-[1440px] mx-auto'>
-                <div className='w-full h-full  flex items-center justify-center pt-12'>
-                  <div className='details grid grid-cols-1 md:grid-cols-2 w-full'>
-                    <div className='fade-up-hidden relative overflow-hidden w-full h-[40vh]'>
-                      <div className='fade-up-show absolute top-0 left-0 w-full px-8 opacity-0'>
-                        <div className='title text-[30px] md:text-[50px] mb-2 md:mb-6'>
+        
+        {/* <SmoothScroll> */}
+          
+          <div className='content-wrapper w-full h-full text-white'>
+            <section id='main' className='main w-full h-full relative z-1'  style={{background:'url(images/banner.png)',backgroundSize:'cover'}}>              
+              <div className='absolute top-0 left-0 w-full h-full'  
+                style={{backgroundImage:'radial-gradient(rgba(40, 40, 80, 0) 5%, rgba(0, 0, 0, 1.0) 80%'}}></div>
+              <Header/>
+              <div className='w-full h-full md:max-w-[1440px] mx-auto pointer-events-none'>                
+                <div className='w-full h-full pt-12'>
+                  <div className='w-full flex flex-wrap justify-center items-center mt-2 mb-16 md:mt-20 md:mb-28'>
+                    <ColorAnimationText/>
+                  </div>
+        
+                  <div className='details grid grid-cols-1 md:grid-cols-2 w-full p-4 gap-16 text-[#eee]'>
+                    <div className='fade-up-hidden relative overflow-hidden w-full'>
+                      <div className='fade-up-show '>
+                        <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
                           Humble Past
                         </div>
-                        <div className='text-[14px] md:text-[30px]'>
-                          Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house. Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
+                        <div className='text-[12px] md:text-[18px] text-justify'>
+                          Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house. 
+                          Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
                         </div>
                       </div>
-                      <div className='fade-up-show absolute top-0 left-0 w-full px-8 opacity-0'>
-                        <div className='title text-[30px] md:text-[50px] mb-2 md:mb-6'>
+                    </div>
+                    <div className='fade-up-hidden relative overflow-hidden w-full'>
+                      <div className='fade-up-show '>
+                        <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
                           Exciting Future
                         </div>
-                        <div className='text-[14px] md:text-[30px]'>
-                          Our vision is clear, and our ambitions are great. We are always looking for the next revolutionizing investment opportunity. Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for any challenge.
+                        <div className='text-[12px] md:text-[18px] text-justify'>
+                          Our vision is clear, and our ambitions are great. 
+                          We are always looking for the next revolutionizing investment and partnership opportunity. 
+                          Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for to make a positive difference in our world.
                         </div>
                       </div>
-                    </div>                    
+                    </div>
+                  </div>
+
+                  <div className='logos w-full md:py-16'>
+                    <Slider {...settings}>
+                      <div className='mx-2'>
+                        <img src='images/logos/Antin.png'/>
+                      </div>
+                      <div className='mx-2'>
+                        <img src='images/logos/Social.png'/>
+                      </div>
+                      <div className='mx-2'>
+                        <img src='images/logos/Soul.png'/>
+                      </div>
+                      <div className='mx-2'>
+                        <img src='images/logos/Brackets.png'/>
+                      </div>
+                      <div className='mx-2'>
+                        <img src='images/logos/VFXStudio.png'/>
+                      </div>
+                      <div className='mx-2'>
+                        <img src='images/logos/Kan.png'/>
+                      </div>
+                    </Slider>
                   </div>
                 </div>
               </div>
             </section>
+            <section id='companies' className='main w-full h-full relative z-1'>
+              <div className='w-full h-full max-w-[1440px] mx-auto pointer-events-none'>                
+                <div className='w-full h-full pt-12'>
+                  <div> </div>
+                </div>
+              </div>
+            </section>
+            <div className='h-40 md:hidden'/>
           </div>
-        </SmoothScroll>        
+        {/* </SmoothScroll> */}
       </main>
-      <Header/>
+      <div id='webGLRender' className='fixed w-full h-full top-0 left-0 pointer-events-none hidden z-0'/>
       <div className='hidden md:block'>
         <Cursor/>
       </div>

@@ -48,7 +48,7 @@ const Loading2 = () => {
     <>
       <div style={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
         <span id="loading" style = {styles.loading}>
-          <p style = {styles.p}>77 Media ...</p>
+          <p style = {styles.p}>77 Media </p>
           <span id="loadingMask" style = {styles.loadingMask}></span>
         </span>
       </div>

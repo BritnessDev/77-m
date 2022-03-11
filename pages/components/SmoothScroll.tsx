@@ -48,10 +48,8 @@ const SmoothScroll = (props:any) => {
   };
 
   return (
-    <div className="smooth-scroll-parent fixed top-0 left-0 w-full h-full overflow-hidden" 
-      style={{backgroundColor:props.bkgroundColor, color:props.foreColor}}
-    >
-      <div ref={scrollingContainerRef}>{props.children}</div>
+    <div className="smooth-scroll-parent fixed top-0 left-0 w-full h-full overflow-hidden bg-black">
+      <div ref={scrollingContainerRef} className='bg-black'>{props.children}</div>
     </div>
   );
 };
