@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import React, {useEffect, useState} from 'react'
 import Head from 'next/head'
-import {TweenLite, gsap} from 'gsap'
+import {TweenMax, gsap} from 'gsap'
 import * as THREE from "three"
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 import { TextureLoader } from 'three'
@@ -26,8 +26,22 @@ const Home: NextPage = () => {
   let camera: any
   let container: any
   var cube : THREE.Mesh
+  let fadeupOrder = -1
   const scene = new THREE.Scene()
-  setTimeout(() => setLoading(false), 1000);
+  setTimeout(() => {setLoading(false);}, 1000);
+  // setTimeout(() => fadeUp(), 5000);
+  const fadeUp = () => {
+    const fadeups = document.getElementsByClassName('fade-up-show')
+    fadeupOrder ++
+    fadeupOrder %=2
+    console.log(fadeupOrder)
+    if (fadeups){
+      TweenMax.to(fadeups[fadeupOrder], 0.1, {y:1000, opacity:0})
+      TweenMax.to(fadeups[fadeupOrder], 2, {y:0, opacity:1, delay:0.1, ease: 'Power4.easeOut',})
+      TweenMax.to(fadeups[fadeupOrder], 2, {y:-1000, opacity:0, delay:5, ease: 'Power4.easeIn',})
+      TweenMax.to(fadeups[fadeupOrder], {y:1000, opacity:0, delay:7,})
+    }
+  }
   const webGLRender = () => {
     container = document.getElementById('webGLRender')
     const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true });
@@ -103,6 +117,7 @@ const Home: NextPage = () => {
     if(typeof document !== "undefined"){
       webGLRender()
     }
+    setInterval(() => fadeUp(), 7000);
   }, [])
 
   useEffect(() => {
@@ -169,30 +184,29 @@ const Home: NextPage = () => {
         </div>
         <SmoothScroll>
           <div className='content-wrapper mx-auto' style={{ color:foreColor}}>            
-            <div id='webGLRender' className='fixed w-full h-full border border-green border-dotted top-0 left-0 pointer-events-none z-0'></div>
+            <div id='webGLRender' className='fixed w-full h-full top-0 left-0 pointer-events-none z-0'></div>
             <section id='main' className='main w-full h-[100vh] relative z-1' >
               <div className='w-full h-[100vh] max-w-[1440px] mx-auto'>
                 <div className='w-full h-full  flex items-center justify-center pt-12'>
                   <div className='details grid grid-cols-1 md:grid-cols-2 w-full'>
-                    <div className='fade-up-hidden relative overflow-hidden w-full h-[50vh]'>
-                      <div className='fade-up-show absolute top-0 left-0 w-full px-8'>
-                        <div className='title text-[50px] mb-8'>
+                    <div className='fade-up-hidden relative overflow-hidden w-full h-[40vh]'>
+                      <div className='fade-up-show absolute top-0 left-0 w-full px-8 opacity-0'>
+                        <div className='title text-[30px] md:text-[50px] mb-2 md:mb-6'>
                           Humble Past
                         </div>
-                        <div className='text-[30px]'>
+                        <div className='text-[14px] md:text-[30px]'>
                           Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house. Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
                         </div>
                       </div>
-                      {/* <div className='fade-up-show absolute '>
-                        <div className='title text-[30px]'>
+                      <div className='fade-up-show absolute top-0 left-0 w-full px-8 opacity-0'>
+                        <div className='title text-[30px] md:text-[50px] mb-2 md:mb-6'>
                           Exciting Future
                         </div>
-                        <div className='text-[20px]'>
+                        <div className='text-[14px] md:text-[30px]'>
                           Our vision is clear, and our ambitions are great. We are always looking for the next revolutionizing investment opportunity. Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for any challenge.
                         </div>
-                      </div> */}
-                    </div>
-                    
+                      </div>
+                    </div>                    
                   </div>
                 </div>
               </div>

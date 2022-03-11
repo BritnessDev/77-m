@@ -8,9 +8,9 @@ const Header = () => {
     if(typeof document !== "undefined"){
       let logo = document.getElementById('77logo')
       if(logo){
-        TweenMax.to(logo, 0, {x:200, y:-500, scale:5, rotate:720, delay:1});
-        TweenMax.to(logo, 1.5, {ease: 'Power4.easeOut', x:200, y:400, scale:5, delay:1});
-        TweenMax.to(logo, 1, {ease: 'Power4.easeInOut', x:0, y:0, scale:1, delay:2.5, rotate:0});
+        TweenMax.to(logo, 0, {y:-500, scale:1, rotate:360, delay:1});
+        TweenMax.to(logo, 1.5, {ease: 'Power4.easeOut', y:70, scale:1, delay:1});
+        TweenMax.to(logo, 1, {ease: 'Power4.easeInOut', y:0, scale:1, delay:2.5, rotate:0});
       }
     }
   }, [])
