@@ -4,7 +4,7 @@ import Head from 'next/head'
 import {TweenMax, gsap} from 'gsap'
 import * as THREE from "three"
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
-import { TextureLoader } from 'three'
+import { BoxGeometry, Light, PlaneGeometry, TextureLoader,  } from 'three'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 import styles from '../styles/Home.module.scss'
@@ -15,12 +15,15 @@ import Cursor from './components/Cursor'
 import Header from './components/Header'
 import ColorAnimationText from './components/ColorAnimationText'
 import Slider from "react-slick"
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(true)
   const [viewport, setViewPort] = useState({width:0, height:0, aspectRatio:1})
   const [viewSize, setViewSize] = useState({distance:3, vFov:0, height:1, width:1})
-  const [cursorPos, setPosition] = useState({x:0, y:0})
-  const [uniforms, setUniforms] = useState({uTexture: {value: new THREE.Texture},uOffset: {value: new THREE.Vector2(0.0, 0.0)},uAlpha: {value: 1}})    
+  const [cube, setCube] = useState(new THREE.Object3D)
     
   const settings = {
     dots: false,
@@ -64,10 +67,10 @@ const Home: NextPage = () => {
   let mouse = new THREE.Vector2() 
   let camera: any
   let container: any
-  var cube : THREE.Mesh
+  let composer: EffectComposer
   let fadeupOrder = -1
   const scene = new THREE.Scene()
-  setTimeout(() => {setLoading(false);}, 1000);
+  setTimeout(() => {setLoading(false);}, 2000);
   // setTimeout(() => fadeUp(), 5000);
   const fadeUp = () => {
     const fadeups = document.getElementsByClassName('fade-up-show')
@@ -85,62 +88,108 @@ const Home: NextPage = () => {
     const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true });
     container.appendChild( renderer.domElement )
     const viewport = { width : container.clientWidth, height : container.clientHeight, aspectRatio : container.clientWidth / container.clientHeight}    
-    camera = new THREE.PerspectiveCamera( 75, viewport.aspectRatio, 0.1, 100000 )
+    camera = new THREE.PerspectiveCamera( 45, viewport.aspectRatio, 0.1, 100000 )
     const viewSize = { distance : camera.position.z, vFov : (camera.fov * Math.PI) / 180, height : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z, width : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z * viewport.aspectRatio, }
-    camera.position.set(0, 30, 800)
+    camera.position.set(-200, 300, 800)
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableRotate = true;
     controls.update();
 
     setViewPort(viewport)
     setViewSize(viewSize)
-    renderer.setClearColor('#000000', 0.0)
+    renderer.setClearColor('#111111', 0)
     renderer.setSize(viewport.width, viewport.height)
-    renderer.setPixelRatio(window.devicePixelRatio)
+    renderer.setPixelRatio(viewport.aspectRatio)
 
-    const light = new THREE.PointLight(0xffffff, 2)
-    light.position.set(0, 600, -500)
-    scene.add(light)
+    const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+    scene.add( light );
+    const light1 = new THREE.PointLight(0x808080, 1, 2000)
+    light1.position.set(-1550,500,1000)
+    scene.add(light1)
 
-    const texturloader = new TextureLoader();
     const loader = new GLTFLoader();
-    const r = 'textures/logos/';
-    const urls = [ r + '1.png', r + '2.png', r + '3.png', r + '4.png', r + '5.png', r + '6.png' ];
-    const textureCube = new THREE.CubeTextureLoader().load( urls );
     
-    
-    let planes: THREE.Object3D<THREE.Event>[] | THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];  // just an array we can use to rotate the cubes
     const loadManager = new THREE.LoadingManager();
     const _loader = new THREE.TextureLoader(loadManager);
 
+    // const materials = [
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/1.png')}),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/2.png')}),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/3.png')}),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/4.png')}),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/5.png')}),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/6.png')}),
+    // ];    
+
     const materials = [
-      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/1.png')}),
-      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/2.png')}),
-      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/3.png')}),
-      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/4.png')}),
-      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/5.png')}),
-      new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/6.png')}),
-    ];
+      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m1.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m1.png'), }),
+      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m2.png'), alphaTest:0.05, alphaMap:_loader.load('textures/logos/m2.png'), }),
+      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m3.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m3.png'), }),
+      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m4.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m4m.png'),}),
+      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m5.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m5.png'), }),
+      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m6.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m6.png'), }),
+      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m7.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m7.png'), }),      
+    ]
+    const material = new THREE.MeshPhysicalMaterial({color:0xF0FFFF
+    });    
+    material.metalness= 0.0
+    material.roughness= 1.0
+    material.transmission= 0.1
+    material.ior= 2.0
+    material.reflectivity=0.2
+    material.envMapIntensity= 0
+    material.clearcoat= 1
+    material.clearcoatRoughness= 0.25
+    material.normalMap= _loader.load('textures/normal.jpg')
+    material.normalScale= new THREE.Vector2(5, 5)
+    material.thickness = 10
     
-    
-    loadManager.onLoad = () => {      
+    loadManager.onLoad = () => {
+      
+      let Plane = new THREE.Mesh(new PlaneGeometry(400,400,1,1), materials[0])
+      Plane.position.z = 174.5
+      cube.add(Plane)
+      
+      Plane = new THREE.Mesh(new PlaneGeometry(400,400,1,1), materials[1])
+      Plane.rotateY(Math.PI)
+      Plane.position.z = -175
+      cube.add(Plane)
+      
+      Plane = new THREE.Mesh(new PlaneGeometry(300,300,1,1), materials[2])
+      Plane.rotateX(Math.PI/2)
+      Plane.position.y = -175
+      cube.add(Plane)
+      
+      Plane = new THREE.Mesh(new PlaneGeometry(300,300,1,1), materials[3])
+      Plane.rotateX(Math.PI/2)
+      Plane.rotateY(Math.PI)
+      Plane.position.y = 175
+      cube.add(Plane)
+      
+      Plane = new THREE.Mesh(new PlaneGeometry(400,400,1,1), materials[4])
+      Plane.rotateY(Math.PI/2)
+      // Plane.rotateY(Math.PI)
+      Plane.position.x = 175
+      cube.add(Plane)
+      
+      Plane = new THREE.Mesh(new PlaneGeometry(300,300,1,1), materials[5])
+      Plane.rotateY(Math.PI/2)
+      Plane.rotateY(Math.PI)
+      Plane.position.x = -175
+      cube.add(Plane)
       loader.load( 'models/cube.glb', function ( gltf ) {
-        console.log(materials)
         let geo
         gltf.scene.traverse( function( object ) {
           if ((object instanceof THREE.Mesh)) geo = object.geometry; 
         });
-        const cubeGeo = new THREE.BoxGeometry(1,1,1)
-        cube = new THREE.Mesh(cubeGeo, materials)
-        cube.scale.set(400,400,400)
-        cube.position.set(0, 0, 0)
+        const _cube = new THREE.Mesh(geo, material)
+        _cube.scale.set(100,100,100)
+        _cube.position.set(0, 0, 0)
+        cube.add(_cube)
         scene.add(cube);
       }, undefined, function ( error ) {
         console.error( error );
       });
-      // const cube = new THREE.Mesh(new THREE.BoxGeometry(400,400,400), materials);
-      // scene.add(cube);
-      
     };
 
     loadManager.onProgress = (urlOfLastItemLoaded, itemsLoaded, itemsTotal) => {
@@ -150,8 +199,13 @@ const Home: NextPage = () => {
 
     animate();
     function animate() {
-      requestAnimationFrame( animate );
-      renderer.render( scene, camera );    
+      requestAnimationFrame( animate )
+      if(cube ){
+        const timer = 0.0002 * Date.now();        
+        cube.rotation.y=timer
+      }
+      // composer.render()
+      renderer.render( scene, camera )
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -205,6 +259,30 @@ const Home: NextPage = () => {
     }
   }
 
+  const rotateCube = (value:number) => {
+    // console.log(cube)
+    if(cube){
+      if(value===1){
+        cube.rotation.x = 90
+        // TweenMax.to(cube, 1, {rotateX:90, ease:'Power4.easeInOut'});
+      }
+      if(value===2){
+        cube.rotation.x = 180        
+      }
+      if(value===3){        
+        cube.rotation.x = 270
+      }
+      if(value===4){        
+        cube.rotation.x = 360
+      }
+      if(value===5){        
+        cube.rotation.z = 90
+      }
+      if(value===6){        
+        cube.rotation.z = -90
+      }
+    }
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -214,15 +292,12 @@ const Home: NextPage = () => {
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
       </Head>
 
-      <main className={styles.main}>        
+      <main className={styles.main}>
         <div className='Loading-wrapper fixed top-0 left-0 w-full h-[100vh]' style={{background:'#000', zIndex:'10000', display:loading?'block':'none'}}>
           <Loading2/>
         </div>
         <div className='content-wrapper w-full h-full text-white'>
-          <section id='main' className='main w-full h-full relative z-1'  style={{background:'url(images/sea1.jpg)',backgroundSize:'cover'}}>              
-            <div className='absolute top-0 left-0 w-full h-full'  
-              // style={{backgroundImage:'radial-gradient(rgba(40, 40, 80, 0) 5%, rgba(0, 0, 0, 1.0) 80%'}}
-              ></div>
+          <section id='main' className='main w-full h-full relative z-1 '  style={{background:'url(images/sea1.jpg)',backgroundSize:'cover'}}>
             <Header/>
             <div className='w-full h-full md:max-w-[1440px] mx-auto pointer-events-none pb-60'>                
               <div className='w-full h-full pt-12'>
@@ -284,26 +359,26 @@ const Home: NextPage = () => {
             </div>
           </section>
           <section id='companies' className='main w-full relative z-2 -mt-60 pb-40'
-            style={{backgroundImage: 'linear-gradient(rgb(92 122 249 / 0%), #020930 10%)'}}
+            style={{backgroundImage: 'linear-gradient(rgb(92 122 249 / 0%), #114 10%)'}}
           >
             <div className='w-full h-full max-w-[1440px] mx-auto'>
               <div className='w-full h-full pt-12 grid grid-cols-1 md:grid-cols-2 gap-8'>
                 <div className='hidden md:block flex-none min-w-[380px]'>
                   <div className='flex items-end w-full h-full'>
                     <div className='' onMouseEnter={()=>followerCursorHidden()} onMouseLeave={()=>followerCursorShow()}>
-                      <div className='company-item'>VFX Studio</div>
-                      <div className='company-item'>SOUL Films</div>
-                      <div className='company-item'>Antin TV</div>
-                      <div className='company-item'>Acquaint Comm</div>
-                      <div className='company-item'>Gabriel Branding</div>
-                      <div className='company-item'>Brackets Technology</div>
+                      <div className='company-item' onClick={()=>rotateCube(1)}>VFX Studio</div>
+                      <div className='company-item' onClick={()=>rotateCube(2)}>SOUL Films</div>
+                      <div className='company-item' onClick={()=>rotateCube(3)}>Antin TV</div>
+                      <div className='company-item' onClick={()=>rotateCube(4)}>Acquaint Comm</div>
+                      <div className='company-item' onClick={()=>rotateCube(5)}>Gabriel Branding</div>
+                      <div className='company-item' onClick={()=>rotateCube(6)}>Brackets Technology</div>
                     </div>
                   </div>
                 </div>
                 <div className='w-full grow'>
                   <div className='md:hidden'>title</div>
                   <div className='h-full relative'>
-                    <div id='webGLRender' className='h-[500px]'/>
+                    <div id='webGLRender' className='h-[650px]'/>
                   </div>
                 </div>
               </div>

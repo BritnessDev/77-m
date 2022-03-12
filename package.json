@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@johh/three-effectcomposer": "^0.1.0",
     "gsap": "^3.9.1",
     "next": "^12.1.0",
     "react": "^17.0.2",
