@@ -26,9 +26,9 @@ const Home: NextPage = () => {
     dots: false,
     arrows:false,
     infinite: true,
-    speed: 1500,
+    speed: 2500,
     autoplay: true,
-    autoplaySpeed: 1500,
+    autoplaySpeed: 2500,
     slidesToShow: 5,
     slidesToScroll: 1,
     pauseOnHover: false,
@@ -221,18 +221,20 @@ const Home: NextPage = () => {
         {/* <SmoothScroll> */}
           
           <div className='content-wrapper w-full h-full text-white'>
-            <section id='main' className='main w-full h-full relative z-1'  style={{background:'url(images/banner.png)',backgroundSize:'cover'}}>              
+            <section id='main' className='main w-full h-full relative z-1'  style={{background:'url(images/sea1.jpg)',backgroundSize:'cover'}}>              
               <div className='absolute top-0 left-0 w-full h-full'  
-                style={{backgroundImage:'radial-gradient(rgba(40, 40, 80, 0) 5%, rgba(0, 0, 0, 1.0) 80%'}}></div>
+                // style={{backgroundImage:'radial-gradient(rgba(40, 40, 80, 0) 5%, rgba(0, 0, 0, 1.0) 80%'}}
+                ></div>
               <Header/>
-              <div className='w-full h-full md:max-w-[1440px] mx-auto pointer-events-none'>                
+              <div className='w-full h-full md:max-w-[1440px] mx-auto pointer-events-none pb-60'>                
                 <div className='w-full h-full pt-12'>
                   <div className='w-full flex flex-wrap justify-center items-center mt-2 mb-16 md:mt-20 md:mb-28'>
                     <ColorAnimationText/>
                   </div>
         
-                  <div className='details grid grid-cols-1 md:grid-cols-2 w-full p-4 gap-16 text-[#eee]'>
-                    <div className='fade-up-hidden relative overflow-hidden w-full'>
+                  <div className='details grid grid-cols-1 md:grid-cols-2 w-full p-4 gap-8 text-[#ddd]'>
+                    <div className='fade-up-hidden relative overflow-hidden w-full rounded-xl p-4' 
+                      style={{backgroundImage: 'linear-gradient(359deg, #2c71ffcf, #c331dfa3)'}}>
                       <div className='fade-up-show '>
                         <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
                           Humble Past
@@ -243,7 +245,8 @@ const Home: NextPage = () => {
                         </div>
                       </div>
                     </div>
-                    <div className='fade-up-hidden relative overflow-hidden w-full'>
+                    <div className='fade-up-hidden relative overflow-hidden w-full rounded-xl p-4' 
+                      style={{backgroundImage: 'linear-gradient(359deg, #2c71ffcf, #c331dfa3)'}}>
                       <div className='fade-up-show '>
                         <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
                           Exciting Future
@@ -257,7 +260,7 @@ const Home: NextPage = () => {
                     </div>
                   </div>
 
-                  <div className='logos w-full md:py-16'>
+                  <div className='logos w-full md:my-16' style={{backgroundImage: 'radial-gradient(#93a4ec, transparent 50%)'}}>
                     <Slider {...settings}>
                       <div className='mx-2'>
                         <img src='images/logos/Antin.png'/>
@@ -282,14 +285,17 @@ const Home: NextPage = () => {
                 </div>
               </div>
             </section>
-            <section id='companies' className='main w-full h-full relative z-1'>
+            <section id='companies' className='main w-full h-full relative z-1 -mt-60'
+              style={{backgroundImage: 'linear-gradient(rgb(92 122 249 / 0%), #020930 20%)'}}
+            >
               <div className='w-full h-full max-w-[1440px] mx-auto pointer-events-none'>                
-                <div className='w-full h-full pt-12'>
-                  <div> </div>
+                <div className='w-full h-full pt-12 grid-cols-1 md:grid-cols-2 gap-8'>
+                  <div className='h-96 py-60'>
+
+                  </div>
                 </div>
               </div>
             </section>
-            <div className='h-40 md:hidden'/>
           </div>
         {/* </SmoothScroll> */}
       </main>

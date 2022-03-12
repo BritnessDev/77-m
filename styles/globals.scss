@@ -30,8 +30,9 @@ body {
   background: rgb(10, 93, 28);
 }
 
-.fade-up-show{
-  text-shadow: 3px 3px 3px rgb(53, 53, 53);
+.fade-up-hidden{
+  // text-shadow: 3px 3px 3px rgb(53, 53, 53);
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.7);
   font-weight: 700;
   margin: 0 5px;
 }
