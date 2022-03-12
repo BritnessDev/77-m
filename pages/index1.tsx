@@ -48,7 +48,7 @@ const Home: NextPage = () => {
     const viewport = { width : container.clientWidth, height : container.clientHeight, aspectRatio : container.clientWidth / container.clientHeight}    
     camera = new THREE.PerspectiveCamera( 75, viewport.aspectRatio, 0.1, 100000 )
     const viewSize = { distance : camera.position.z, vFov : (camera.fov * Math.PI) / 180, height : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z, width : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z * viewport.aspectRatio, }
-    camera.position.set(0, 30, 800)
+    camera.position.set(0, 150, 800)
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableRotate = true;
     controls.update();
@@ -271,42 +271,7 @@ const Home: NextPage = () => {
           <Loading2/>
         </div>        
         
-        <SmoothScroll>
-          <div className='content-wrapper mx-auto' style={{ color:foreColor}}>
-            <section id='main' className='main w-full h-[100vh] relative z-1'  style={{background:'url(images/banner.png)',backgroundSize:'cover'}}>
-              <div className='absolute top-0 left-0 w-full h-full'  style={{backgroundImage:'radial-gradient( circle, rgba(40, 40, 80, 0.99) 5%, rgba(0, 0, 00, 1.0)'}}></div>
-              <div className='w-full h-[100vh] max-w-[1440px] mx-auto'>
-                <div className='w-full h-full  flex items-center justify-center pt-12'>
-                  <div className='details grid grid-cols-1 md:grid-cols-2 w-full'>
-                    <div className='fade-up-hidden relative overflow-hidden w-full h-[40vh]'>
-                      <div className='fade-up-show absolute top-0 left-0 w-full px-8 opacity-0'>
-                        <div className='title text-[30px] md:text-[50px] mb-2 md:mb-6'>
-                          Humble Past
-                        </div>
-                        <div className='text-[14px] md:text-[30px]'>
-                          Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house. 
-                          Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
-                        </div>
-                      </div>
-                      <div className='fade-up-show absolute top-0 left-0 w-full px-8 opacity-0'>
-                        <div className='title text-[30px] md:text-[50px] mb-2 md:mb-6'>
-                          Exciting Future
-                        </div>
-                        <div className='text-[14px] md:text-[30px]'>
-                          Our vision is clear, and our ambitions are great. 
-                          We are always looking for the next revolutionizing investment and partnership opportunity. 
-                          Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for to make a positive difference in our world.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        </SmoothScroll>        
       </main>
-      <Header/>
       <div id='webGLRender' className='fixed w-full h-full top-0 left-0 pointer-events-auto z-0'/>
       <div className='hidden md:block'>
         <Cursor/>
