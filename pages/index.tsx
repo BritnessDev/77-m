@@ -15,9 +15,9 @@ import Cursor from './components/Cursor'
 import Header from './components/Header'
 import ColorAnimationText from './components/ColorAnimationText'
 import Slider from "react-slick"
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+// import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+// import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+// import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(true)
@@ -64,25 +64,11 @@ const Home: NextPage = () => {
       }
     ]
   };
-  let mouse = new THREE.Vector2() 
   let camera: any
   let container: any
-  let composer: EffectComposer
-  let fadeupOrder = -1
   const scene = new THREE.Scene()
   setTimeout(() => {setLoading(false);}, 2000);
-  // setTimeout(() => fadeUp(), 5000);
-  const fadeUp = () => {
-    const fadeups = document.getElementsByClassName('fade-up-show')
-    fadeupOrder ++
-    fadeupOrder %=2
-    if (fadeups){
-      TweenMax.to(fadeups[fadeupOrder], 0.1, {y:1000, opacity:0})
-      TweenMax.to(fadeups[fadeupOrder], 2, {y:0, opacity:1, delay:0.1, ease: 'Power4.easeOut',})
-      TweenMax.to(fadeups[fadeupOrder], 2, {y:-1000, opacity:0, delay:5, ease: 'Power4.easeIn',})
-      TweenMax.to(fadeups[fadeupOrder], {y:1000, opacity:0, delay:7,})
-    }
-  }
+  
   const webGLRender = () => {
     container = document.getElementById('webGLRender')
     const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true });
@@ -204,7 +190,6 @@ const Home: NextPage = () => {
         const timer = 0.0002 * Date.now();        
         cube.rotation.y=timer
       }
-      // composer.render()
       renderer.render( scene, camera )
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -283,6 +268,7 @@ const Home: NextPage = () => {
       }
     }
   }
+  
   return (
     <div className={styles.container}>
       <Head>
