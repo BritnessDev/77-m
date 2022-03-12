@@ -94,7 +94,7 @@ const Home: NextPage = () => {
 
     setViewPort(viewport)
     setViewSize(viewSize)
-    renderer.setClearColor('#000000', 0.1)
+    renderer.setClearColor('#000000', 0.0)
     renderer.setSize(viewport.width, viewport.height)
     renderer.setPixelRatio(window.devicePixelRatio)
 
@@ -132,7 +132,7 @@ const Home: NextPage = () => {
         });
         const cubeGeo = new THREE.BoxGeometry(1,1,1)
         cube = new THREE.Mesh(cubeGeo, materials)
-        cube.scale.set(100,100,100)
+        cube.scale.set(400,400,400)
         cube.position.set(0, 0, 0)
         scene.add(cube);
       }, undefined, function ( error ) {
@@ -157,12 +157,13 @@ const Home: NextPage = () => {
 
     window.addEventListener( 'resize', onWindowResize )
     function onWindowResize() {      
+      container = document.getElementById('webGLRender')
       const viewport = {
         width : container.clientWidth, height : container.clientHeight,
         aspectRatio : container.clientWidth / container.clientHeight
       }
       
-      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       
       const viewSize = {
@@ -174,7 +175,7 @@ const Home: NextPage = () => {
       
       setViewPort(viewport)
       setViewSize(viewSize)
-      renderer.setSize( window.innerWidth, window.innerHeight );
+      renderer.setSize( container.clientWidth, container.clientHeight );
     }
   }
 
@@ -217,89 +218,100 @@ const Home: NextPage = () => {
         <div className='Loading-wrapper fixed top-0 left-0 w-full h-[100vh]' style={{background:'#000', zIndex:'10000', display:loading?'block':'none'}}>
           <Loading2/>
         </div>
-        
-        {/* <SmoothScroll> */}
-          
-          <div className='content-wrapper w-full h-full text-white'>
-            <section id='main' className='main w-full h-full relative z-1'  style={{background:'url(images/sea1.jpg)',backgroundSize:'cover'}}>              
-              <div className='absolute top-0 left-0 w-full h-full'  
-                // style={{backgroundImage:'radial-gradient(rgba(40, 40, 80, 0) 5%, rgba(0, 0, 0, 1.0) 80%'}}
-                ></div>
-              <Header/>
-              <div className='w-full h-full md:max-w-[1440px] mx-auto pointer-events-none pb-60'>                
-                <div className='w-full h-full pt-12'>
-                  <div className='w-full flex flex-wrap justify-center items-center mt-2 mb-16 md:mt-20 md:mb-28'>
-                    <ColorAnimationText/>
-                  </div>
-        
-                  <div className='details grid grid-cols-1 md:grid-cols-2 w-full p-4 gap-8 text-[#ddd]'>
-                    <div className='fade-up-hidden relative overflow-hidden w-full rounded-xl p-4' 
-                      style={{backgroundImage: 'linear-gradient(359deg, #2c71ffcf, #c331dfa3)'}}>
-                      <div className='fade-up-show '>
-                        <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
-                          Humble Past
-                        </div>
-                        <div className='text-[12px] md:text-[18px] text-justify'>
-                          Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house. 
-                          Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
-                        </div>
+        <div className='content-wrapper w-full h-full text-white'>
+          <section id='main' className='main w-full h-full relative z-1'  style={{background:'url(images/sea1.jpg)',backgroundSize:'cover'}}>              
+            <div className='absolute top-0 left-0 w-full h-full'  
+              // style={{backgroundImage:'radial-gradient(rgba(40, 40, 80, 0) 5%, rgba(0, 0, 0, 1.0) 80%'}}
+              ></div>
+            <Header/>
+            <div className='w-full h-full md:max-w-[1440px] mx-auto pointer-events-none pb-60'>                
+              <div className='w-full h-full pt-12'>
+                <div className='w-full flex flex-wrap justify-center items-center mt-2 mb-16 md:mt-20 md:mb-28'>
+                  <ColorAnimationText/>
+                </div>
+      
+                <div className='details grid grid-cols-1 md:grid-cols-2 w-full p-4 gap-8 text-[#ddd]'>
+                  <div className='fade-up-hidden relative overflow-hidden rounded-xl p-4' 
+                    style={{backgroundImage: 'linear-gradient(359deg, #2c71ffcf, #c331dfa3)'}}>
+                    <div className='fade-up-show '>
+                      <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
+                        Humble Past
                       </div>
-                    </div>
-                    <div className='fade-up-hidden relative overflow-hidden w-full rounded-xl p-4' 
-                      style={{backgroundImage: 'linear-gradient(359deg, #2c71ffcf, #c331dfa3)'}}>
-                      <div className='fade-up-show '>
-                        <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
-                          Exciting Future
-                        </div>
-                        <div className='text-[12px] md:text-[18px] text-justify'>
-                          Our vision is clear, and our ambitions are great. 
-                          We are always looking for the next revolutionizing investment and partnership opportunity. 
-                          Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for to make a positive difference in our world.
-                        </div>
+                      <div className='text-[12px] md:text-[18px] text-justify'>
+                        Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house. 
+                        Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
                       </div>
                     </div>
                   </div>
+                  <div className='fade-up-hidden relative overflow-hidden rounded-xl p-4' 
+                    style={{backgroundImage: 'linear-gradient(359deg, #2c71ffcf, #c331dfa3)'}}>
+                    <div className='fade-up-show '>
+                      <div className='title text-[24px] md:text-[32px] mb-2 md:mb-3'>
+                        Exciting Future
+                      </div>
+                      <div className='text-[12px] md:text-[18px] text-justify'>
+                        Our vision is clear, and our ambitions are great. 
+                        We are always looking for the next revolutionizing investment and partnership opportunity. 
+                        Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for to make a positive difference in our world.
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                  <div className='logos w-full md:my-16' style={{backgroundImage: 'radial-gradient(#93a4ec, transparent 50%)'}}>
-                    <Slider {...settings}>
-                      <div className='mx-2'>
-                        <img src='images/logos/Antin.png'/>
-                      </div>
-                      <div className='mx-2'>
-                        <img src='images/logos/Social.png'/>
-                      </div>
-                      <div className='mx-2'>
-                        <img src='images/logos/Soul.png'/>
-                      </div>
-                      <div className='mx-2'>
-                        <img src='images/logos/Brackets.png'/>
-                      </div>
-                      <div className='mx-2'>
-                        <img src='images/logos/VFXStudio.png'/>
-                      </div>
-                      <div className='mx-2'>
-                        <img src='images/logos/Kan.png'/>
-                      </div>
-                    </Slider>
+                <div className='logos w-full md:my-16' style={{backgroundImage: 'radial-gradient(#68cce9 30%, transparent 60%)'}}>
+                  <Slider {...settings}>
+                    <div className='mx-2'>
+                      <img src='images/logos/Antin.png'/>
+                    </div>
+                    <div className='mx-2'>
+                      <img src='images/logos/Social.png'/>
+                    </div>
+                    <div className='mx-2'>
+                      <img src='images/logos/Soul.png'/>
+                    </div>
+                    <div className='mx-2'>
+                      <img src='images/logos/Brackets.png'/>
+                    </div>
+                    <div className='mx-2'>
+                      <img src='images/logos/VFXStudio.png'/>
+                    </div>
+                    <div className='mx-2'>
+                      <img src='images/logos/Kan.png'/>
+                    </div>
+                  </Slider>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id='companies' className='main w-full relative z-2 -mt-60 pb-40'
+            style={{backgroundImage: 'linear-gradient(rgb(92 122 249 / 0%), #020930 10%)'}}
+          >
+            <div className='w-full h-full max-w-[1440px] mx-auto'>
+              <div className='w-full h-full pt-12 grid grid-cols-1 md:grid-cols-2 gap-8'>
+                <div className='hidden md:block flex-none min-w-[380px]'>
+                  <div className='flex items-end w-full h-full'>
+                    <div className='' onMouseEnter={()=>followerCursorHidden()} onMouseLeave={()=>followerCursorShow()}>
+                      <div className='company-item'>VFX Studio</div>
+                      <div className='company-item'>SOUL Films</div>
+                      <div className='company-item'>Antin TV</div>
+                      <div className='company-item'>Acquaint Comm</div>
+                      <div className='company-item'>Gabriel Branding</div>
+                      <div className='company-item'>Brackets Technology</div>
+                    </div>
+                  </div>
+                </div>
+                <div className='w-full grow'>
+                  <div className='md:hidden'>title</div>
+                  <div className='h-full relative'>
+                    <div id='webGLRender' className='h-[500px]'/>
                   </div>
                 </div>
               </div>
-            </section>
-            <section id='companies' className='main w-full h-full relative z-1 -mt-60'
-              style={{backgroundImage: 'linear-gradient(rgb(92 122 249 / 0%), #020930 20%)'}}
-            >
-              <div className='w-full h-full max-w-[1440px] mx-auto pointer-events-none'>                
-                <div className='w-full h-full pt-12 grid-cols-1 md:grid-cols-2 gap-8'>
-                  <div className='h-96 py-60'>
-
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        {/* </SmoothScroll> */}
+            </div>
+          </section>
+        </div>
       </main>
-      <div id='webGLRender' className='fixed w-full h-full top-0 left-0 pointer-events-none hidden z-0'/>
+      
       <div className='hidden md:block'>
         <Cursor/>
       </div>

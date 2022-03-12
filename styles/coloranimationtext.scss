@@ -2,13 +2,13 @@
   color: white;
   text-shadow: 6px 4px 6px black;
   opacity: 1.0;
-  -webkit-animation: loading 2.6s ease-in-out infinite alternate;
+  -webkit-animation: loading 1.6s ease-in-out infinite alternate;
 }
 
 @-webkit-keyframes loading {
   to {
     color: #7cfc00;
-    text-shadow: 6px 4px 6px rgb(45, 75, 0);
+    text-shadow: 6px 4px 50px gold;
     opacity: 1;
   }
 }

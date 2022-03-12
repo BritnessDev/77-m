@@ -36,3 +36,22 @@ body {
   font-weight: 700;
   margin: 0 5px;
 }
+
+.company-item{
+  height: 50px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  font-family: Roboto;
+  font-size: 30px;
+  font-weight: 600;
+  color: grey;
+  transition: all 0.15s;  
+}
+
+.company-item:hover{
+  font-size: 35px;
+  color:white;
+  cursor: pointer;
+  transition: all 0.3s;
+}

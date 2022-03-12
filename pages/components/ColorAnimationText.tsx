@@ -27,7 +27,7 @@ const ColorAnimationText = (props:any) => {
         <span>t</span>
         <span>i</span>
         <span>v</span>
-        <span>e</span>&nbsp;<br className="md:hidden"/>
+        <span>e</span>&nbsp;<br className="lg:hidden"/>
         <span>D</span>
         <span>i</span>
         <span>f</span>
@@ -41,7 +41,7 @@ const ColorAnimationText = (props:any) => {
         <span>w</span>
         <span>i</span>
         <span>t</span>
-        <span>h</span>&nbsp;<br className="md:hidden"/>
+        <span>h</span>&nbsp;<br className="sm:hidden"/>
         <span>I</span>
         <span>n</span>
         <span>t</span>
