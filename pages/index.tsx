@@ -1,12 +1,10 @@
 import type { NextPage } from 'next'
-import React, { Children, useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import Head from 'next/head'
 import { TweenMax, gsap } from 'gsap'
 import * as THREE from "three"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { BoxGeometry, Light, PlaneGeometry, TextureLoader, } from 'three'
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import styles from '../styles/Home.module.scss'
 import Cursor from './components/Cursor'
@@ -26,7 +24,7 @@ import {
   Vector4,
   WebGLRenderTarget
 } from 'three';
-// import './libs/Water'
+
 // import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 // import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 // import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
@@ -410,8 +408,8 @@ const Home: NextPage = () => {
       if (progress == 1.0) initContent()
     };
 
-    var bgMaterial = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/background.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/bkmask.png') });
-    const bg = new THREE.Mesh(new THREE.PlaneBufferGeometry(200, 30, 10, 1), bgMaterial)
+    var bgMaterial = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/1.png') });
+    const bg = new THREE.Mesh(new THREE.PlaneBufferGeometry(190, 100, 10, 1), bgMaterial)
     bg.position.set(0, 12, -100)
     scene.add(bg)
     const logo = new THREE.Object3D
@@ -493,7 +491,7 @@ const Home: NextPage = () => {
 
     function initContent() {
       animate()
-      setLoading(true)
+      // setLoading(true)
       flag = false;
       const temp = myCube.position
       lightPoint.position.set(temp.x - 10, temp.y + 20, temp.z)

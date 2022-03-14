@@ -46,11 +46,13 @@ const Loading2 = () => {
 
   return (
     <>
-      <div style={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
-        <span id="loading" style = {styles.loading}>
-          <p style = {styles.p}>77 Media </p>
-          <span id="loadingMask" style = {styles.loadingMask}></span>
-        </span>
+      <div className="max-w-[340px] min-w-[340px] mx-auto overflow-hidden w-full h-full">
+        <div style={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
+          <span id="loading" style = {styles.loading}>
+            <p style = {styles.p}>77 Media </p>
+            <span id="loadingMask" style = {styles.loadingMask}></span>
+          </span>
+        </div>
       </div>
     </>
   )
