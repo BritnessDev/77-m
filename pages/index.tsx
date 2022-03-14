@@ -203,12 +203,10 @@ const Home: NextPage = () => {
     window.addEventListener("wheel",  function(event: { deltaY: number }) {
       if (flag){        
         flag=false
-        if(event.deltaY>0){
-          order++         
-        }
-        else{
-          order--      
-        }
+        if(event.deltaY>0)
+          order++
+        else
+          order--
         
         if (order<2) {
           order = 2
@@ -224,19 +222,31 @@ const Home: NextPage = () => {
         updateContent()
       }
     })
-    window.addEventListener("touchstart", function(touchEvent) {      
-      touchvalue = touchEvent.changedTouches[0].pageY      
+    window.addEventListener("touchstart", function(touchEvent) {
+      if (flag)
+        touchvalue = touchEvent.changedTouches[0].pageY
     }, false);
     window.addEventListener("touchend", function(touchEvent) {
-      const alphaX = myCube.rotation.x
-      if (touchvalue < touchEvent.changedTouches[0].pageY){        
-        TweenMax.to(myCube.rotation, 0.5, { x: alphaX + Math.PI/2 ,  ease: 'Power0.easeInOut'})
-        order++
-      } else{
-        TweenMax.to(myCube.rotation, 0.5, { x: alphaX - Math.PI/2 ,  ease: 'Power0.easeInOut'})
-        order--
+      if(flag){
+        flag = false      
+        if (touchvalue < touchEvent.changedTouches[0].pageY)
+          order++
+        else
+          order--
+          
+        if (order<2) {
+          order = 2
+          setTimeout(() => {flag = true}, 1000)
+          return
+        }
+
+        if (order>5) {
+          order = 5
+          setTimeout(() => {flag = true}, 1000)
+          return
+        }
+        updateContent()
       }
-      updateContent()
     }, false);
   }
 
