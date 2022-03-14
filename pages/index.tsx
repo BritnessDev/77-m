@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import React, {useEffect, useState} from 'react'
+import { isMobile } from 'react-device-detect'
 import Head from 'next/head'
 import {TweenMax, gsap} from 'gsap'
 import * as THREE from "three"
@@ -72,7 +73,8 @@ const Home: NextPage = () => {
     const bg = new THREE.Mesh(new THREE.PlaneBufferGeometry(200, 30, 10, 1), bgMaterial)
     bg.position.set(0,12,-100)
     scene.add(bg)
-
+    const logo = new THREE.Object3D
+    // scene.add(logo)
     var logoMaterial1 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Acquaint.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/AcquaintMask.png')});
     var logoMaterial2 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Antin.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/AntinMask.png')});
     var logoMaterial3 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Brackets.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/BracketsMask.png')});
@@ -81,8 +83,33 @@ const Home: NextPage = () => {
     var logoMaterial6 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Soul.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/SoulMask.png')});
     var logoMaterial7 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/VFXStudio.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/VFXStudioMask.png')});
     const logo1 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial1)
-    logo1.position.set(0, 1, 0)
-    // scene.add(logo1)
+    logo1.position.set(0, 0, 0)
+    logo.add(logo1)
+    const logo2 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial2)
+    logo1.position.set(0, 0, 0)
+    logo.add(logo2)
+    const logo3 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial3)
+    logo1.position.set(0, 0, 0)
+    logo.add(logo3)
+    const logo4 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial4)
+    logo1.position.set(0, 0, 0)
+    logo.add(logo4)
+    const logo5 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial6)
+    logo1.position.set(0, 0, 0)
+    logo.add(logo5)
+    const logo6 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial5)
+    logo1.position.set(0, 0, 0)
+    logo.add(logo6)
+    const logo7 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial7)
+    logo1.position.set(0, 0, 0)
+    logo.add(logo7)
+    logo.children[0].position.set(-5, 0, 0)
+    logo.children[1].position.set(-3, 1, 0)
+    logo.children[2].position.set(-1, 2, 0)
+    logo.children[3].position.set(0, 0, 0)
+    logo.children[4].position.set(1, 2, 0)
+    logo.children[5].position.set(3, 1, 0)
+    logo.children[6].position.set(5, 0, 0)
 
     const surface = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 10, 10), new THREE.MeshBasicMaterial({color:0x222233, side:THREE.DoubleSide, }))
     scene.add(surface)
@@ -129,23 +156,23 @@ const Home: NextPage = () => {
 
       const alphaX = myCube.rotation.x
       if (order === 0)
-        TweenMax.to(myCube.position, 1, { x: 0 ,  ease: 'Power0.easeInOut', delay:0.5})
+        TweenMax.to(myCube.position, 0.7, { x: 0 ,  ease: 'Power0.easeInOut', delay:0.3})
       else      
-        TweenMax.to(myCube.position, 1, { x: order<2?0:(order % 2 ==0)?2:-2 ,  ease: 'Power0.easeInOut', delay:0.5})
+        TweenMax.to(myCube.position, 0.7, { x: order<2?0:(order % 2 ==0)?2:-2 ,  ease: 'Power0.easeInOut', delay:0.3})
 
       if(order>orderBefore){        
-        TweenMax.to(myCube.rotation, 1, { x: alphaX - Math.PI/2 ,  ease: 'Power0.easeInOut', delay:0.5})
+        TweenMax.to(myCube.rotation, 0.7, { x: alphaX - Math.PI ,  ease: 'Power0.easeInOut', delay:0.3})
       }
       else{
-        TweenMax.to(myCube.rotation, 1, { x: alphaX + Math.PI/2 ,  ease: 'Power0.easeInOut', delay:0.5})
+        TweenMax.to(myCube.rotation, 0.7, { x: alphaX + Math.PI ,  ease: 'Power0.easeInOut', delay:0.3})
       }
 
       if(order==1){
-        TweenMax.to(details[order], 0.7, {opacity:1, scale:3, ease:'Power0.easeInOut', delay:0.7})
+        TweenMax.to(details[order], 0.7, {opacity:1, scale:isMobile?2:3, ease:'Power0.easeInOut', delay:0.7})
       }else{
         TweenMax.to(details[order], 0.7, {opacity:1, scale:1.3, ease:'Power0.easeInOut', delay:0.7})
         if(orderBefore ==1)
-          TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:order>orderBefore?5:1, ease:'Power0.easeInOut'})
+          TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:isMobile?3:5, ease:'Power0.easeInOut'})
         else
           TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:order>orderBefore?1.6:1, ease:'Power0.easeInOut'})
       }
@@ -232,10 +259,10 @@ const Home: NextPage = () => {
           <div className='w-full h-full flex justify-center items-center relative overflow-hidden text-white'>
             <div></div>
             <div className='logo-title flex items-center uppercase'>
-              <div className='text-[90px]'>77</div>
+              <div className='text-[50px] md:text-[90px]'>77</div>
               <div className='ml-2'>
-                <div className='text-right text-[55px] leading-[50px]'>Media</div>
-                <div className='text-right text-[25px] leading-[25px]'>Holding</div>
+                <div className='text-right text-[30px] leading-[25px] md:text-[55px] md:leading-[50px]'>Media</div>
+                <div className='text-right text-[15px] leading-[15px] md:text-[25px] md:leading-[25px]'>Holding</div>
               </div>
             </div>
             
@@ -243,7 +270,7 @@ const Home: NextPage = () => {
               <div className='flex w-full h-full items-center justify-center'>
                 <div className='details relative w-[70vw] h-[60vh] flex justify-start items-end'>
                   <div className='w-full'>
-                    <div className='title text-[30px] font-semibold uppercase pb-10'>Making a Positive Difference with Integrity</div>
+                    <div className='title text-[15px] md:text-[30px] font-semibold uppercase pb-10'>Making a Positive Difference with Integrity</div>
                   </div>
                 </div>
               </div>
@@ -252,9 +279,9 @@ const Home: NextPage = () => {
             <div className='absolute w-full h-full '>
               <div className='flex w-full h-full items-center justify-center'>
                 <div className='details relative w-[70vw] h-[60vh] flex justify-end items-end'>
-                  <div className='w-[40%]'>
-                    <div className='title text-[30px] font-semibold mb-4 uppercase'>Humble Past</div>
-                    <div className='description text-[25px] leading-[25px] text-justify'>
+                  <div className='w-full md:w-[40%]'>
+                    <div className='title text-[15px] md:text-[30px] font-semibold mb-2 md:mb-4 uppercase'>Humble Past</div>
+                    <div className='description text-[10px] leading-[10px] md:text-[25px] md:leading-[25px] text-justify'>
                       Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house.<br/><br/>
                       Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
                     </div>
@@ -266,9 +293,9 @@ const Home: NextPage = () => {
             <div className='absolute w-full h-full '>
               <div className='flex w-full h-full items-center justify-center'>
                 <div className='details relative w-[70vw] h-[60vh] flex justify-start items-end'>
-                  <div className='w-[40%]'>
-                    <div className='title text-[30px] font-semibold mb-4 uppercase'>Exciting Future</div>
-                    <div className='description text-[25px] leading-[25px] text-justify'>
+                  <div className='w-full md:w-[40%]'>
+                    <div className='title text-[15px] md:text-[30px] font-semibold mb-2 md:mb-4 uppercase'>Exciting Future</div>
+                    <div className='description text-[10px] leading-[10px] md:text-[25px] md:leading-[25px] text-justify'>
                       Our vision is clear, and our ambitions are great. We are always looking for the next revolutionizing investment opportunity.<br/><br/>
                       Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for any challenge.
                     </div>
