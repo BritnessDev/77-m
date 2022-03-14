@@ -69,7 +69,9 @@ const Home: NextPage = () => {
     };
 
     var bgMaterial = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/background.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/bkmask.png')});
-    const bg = new THREE.Mesh(new THREE.PlaneBufferGeometry(1000, 150, 10, 1), bgMaterial)
+    const bg = new THREE.Mesh(new THREE.PlaneBufferGeometry(200, 30, 10, 1), bgMaterial)
+    bg.position.set(0,12,-100)
+    scene.add(bg)
 
     var logoMaterial1 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Acquaint.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/AcquaintMask.png')});
     var logoMaterial2 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Antin.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/AntinMask.png')});
@@ -131,16 +133,22 @@ const Home: NextPage = () => {
       else      
         TweenMax.to(myCube.position, 1, { x: order<2?0:(order % 2 ==0)?2:-2 ,  ease: 'Power0.easeInOut', delay:0.5})
 
-      if(order>orderBefore){
+      if(order>orderBefore){        
         TweenMax.to(myCube.rotation, 1, { x: alphaX - Math.PI/2 ,  ease: 'Power0.easeInOut', delay:0.5})
       }
       else{
         TweenMax.to(myCube.rotation, 1, { x: alphaX + Math.PI/2 ,  ease: 'Power0.easeInOut', delay:0.5})
       }
 
-      
-      TweenMax.to(details[order], 0.7, {opacity:1, scale:1.3, ease:'Power0.easeInOut', delay:0.7})
-      TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:order>orderBefore?1.6:1, ease:'Power0.easeInOut'})
+      if(order==1){
+        TweenMax.to(details[order], 0.7, {opacity:1, scale:3, ease:'Power0.easeInOut', delay:0.7})
+      }else{
+        TweenMax.to(details[order], 0.7, {opacity:1, scale:1.3, ease:'Power0.easeInOut', delay:0.7})
+        if(orderBefore ==1)
+          TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:order>orderBefore?5:1, ease:'Power0.easeInOut'})
+        else
+          TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:order>orderBefore?1.6:1, ease:'Power0.easeInOut'})
+      }
       
       orderBefore = order
       if (order>1)
