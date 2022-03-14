@@ -1,7 +1,8 @@
-import React, {useState, useEffect, useRef } from 'react'
+import React, {useEffect} from 'react'
 import gsap from 'gsap'
 
 import {FaMediumM} from "react-icons/fa"
+import { isMobile } from 'react-device-detect'
 
 const Cursor = () => {
   
@@ -19,10 +20,16 @@ const Cursor = () => {
 
   return (
     <>
-      <div className='fixed cursor w-[6px] h-[6px] left-0 top-0 bg-[#7cfc00] rounded-full pointer-events-none z-10'/>
-      <div className='fixed cursor w-[50px] h-[50px] left-0 top-0 bg-transparent rounded-full border-2 border-[#7cfc00] text-[#7cfc00] pointer-events-none z-10 flex justify-center items-center text-[22px]'>
-        <FaMediumM/>
-      </div>
+      {isMobile?
+        <></>
+        :
+        <>
+          <div className='fixed cursor w-[6px] h-[6px] left-0 top-0 bg-[#7cfc00] rounded-full pointer-events-none z-10'/>
+          <div className='fixed cursor w-[50px] h-[50px] left-0 top-0 bg-transparent rounded-full border-2 border-[#7cfc00] text-[#7cfc00] pointer-events-none z-10 flex justify-center items-center text-[22px]'>
+            <FaMediumM/>
+          </div>
+        </>
+      }
     </>
   );
 }
