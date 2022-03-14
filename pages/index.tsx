@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import React, {useEffect, useState} from 'react'
+import React, {Children, useEffect, useState} from 'react'
 import { isMobile } from 'react-device-detect'
 import Head from 'next/head'
 import {TweenMax, gsap} from 'gsap'
@@ -11,12 +11,13 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import styles from '../styles/Home.module.scss'
 import Cursor from './components/Cursor'
 import Loading2 from './components/Loading2'
+import Header from './components/Header'
 // import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 // import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 // import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 
 const Home: NextPage = () => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   let camera: any
   let container: any
@@ -65,7 +66,6 @@ const Home: NextPage = () => {
     loadManager.onProgress = (urlOfLastItemLoaded, itemsLoaded, itemsTotal) => {
       scene.background = bgTexture
       const progress = itemsLoaded / itemsTotal;
-      console.log(progress, urlOfLastItemLoaded)
       if (progress == 1.0) initContent()
     };
 
@@ -74,7 +74,7 @@ const Home: NextPage = () => {
     bg.position.set(0,12,-100)
     scene.add(bg)
     const logo = new THREE.Object3D
-    // scene.add(logo)
+    scene.add(logo)
     var logoMaterial1 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Acquaint.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/AcquaintMask.png')});
     var logoMaterial2 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Antin.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/AntinMask.png')});
     var logoMaterial3 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Brackets.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/BracketsMask.png')});
@@ -82,34 +82,34 @@ const Home: NextPage = () => {
     var logoMaterial5 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Gabriel.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/GabrielMask.png')});
     var logoMaterial6 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/Soul.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/SoulMask.png')});
     var logoMaterial7 = new THREE.MeshLambertMaterial({map: loaderTexture.load('textures/logos/VFXStudio.png'), alphaTest:0.01, alphaMap:loaderTexture.load('textures/logos/VFXStudioMask.png')});
+    
     const logo1 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial1)
     logo1.position.set(0, 0, 0)
     logo.add(logo1)
+    
     const logo2 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial2)
     logo1.position.set(0, 0, 0)
     logo.add(logo2)
+    
     const logo3 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial3)
     logo1.position.set(0, 0, 0)
     logo.add(logo3)
-    const logo4 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial4)
+    
+    const logo4 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial6)
     logo1.position.set(0, 0, 0)
     logo.add(logo4)
-    const logo5 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial6)
+    
+    const logo5 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial5)
     logo1.position.set(0, 0, 0)
     logo.add(logo5)
-    const logo6 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial5)
+    
+    const logo6 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial7)
     logo1.position.set(0, 0, 0)
     logo.add(logo6)
-    const logo7 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial7)
-    logo1.position.set(0, 0, 0)
-    logo.add(logo7)
-    logo.children[0].position.set(-5, 0, 0)
-    logo.children[1].position.set(-3, 1, 0)
-    logo.children[2].position.set(-1, 2, 0)
-    logo.children[3].position.set(0, 0, 0)
-    logo.children[4].position.set(1, 2, 0)
-    logo.children[5].position.set(3, 1, 0)
-    logo.children[6].position.set(5, 0, 0)
+    
+    // const logo7 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial4)
+    // logo1.position.set(0, 0, 0)
+    // logo.add(logo7)
 
     const surface = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 10, 10), new THREE.MeshBasicMaterial({color:0x222233, side:THREE.DoubleSide, }))
     scene.add(surface)
@@ -132,20 +132,32 @@ const Home: NextPage = () => {
     
     temp = document.querySelector('.main-part > div > div:nth-child(1)'); details.push(temp); 
     temp = document.querySelector('.main-part > div > div:nth-child(1)'); details.push(temp); 
-    console.log(details)
-    animate();
+    
+    // animate();
 
     function animate() {
-
+      if(logo){        
+        const timer = - 0.00015 * Date.now();
+        let l=6;
+        let center = logo.position
+        for(let i=0;i<6;i++){
+          logo.children[i].position.x = center.x + l * Math.cos( timer + i* Math.PI/3)
+          logo.children[i].position.z = center.z + l * Math.sin( timer + i* Math.PI/3)          
+        }
+      }
       requestAnimationFrame( animate )
       renderer.render( scene, camera )
     }
 
     function initContent(){
-      setLoading(false)
+      animate()
+      setLoading(true)
       flag = false;
       const temp = myCube.position
       lightPoint.position.set(temp.x-10, temp.y+20, temp.z)
+      logo.position.set(0, -5, -1.5)
+      // logo.position.set(-0.5, -0.3, 7)
+      // logo.scale.set(0.2, 0.2, 0.2)
       myCube.position.y=-5
       TweenMax.to(myCube.position, 3, {y:-0.5, ease:"elastic.out(1, 0.3)", delay:0.1})
       setTimeout(() => { order++; updateContent()}, 3000)
@@ -165,6 +177,12 @@ const Home: NextPage = () => {
       }
       else{
         TweenMax.to(myCube.rotation, 0.7, { x: alphaX + Math.PI ,  ease: 'Power0.easeInOut', delay:0.3})
+      }
+
+      if (order==3){
+        TweenMax.to(logo.position, 3, { y:0.8, ease: 'elastic.out(1.2, 0.3)' })
+      }else{
+        TweenMax.to(logo.position, 0.5, { y:-5, ease: 'Power0.easeInOut', delay:0.3})
       }
 
       if(order==1){
@@ -316,9 +334,12 @@ const Home: NextPage = () => {
             
           </div>
         </div>
+        <div className='absolute top-0 left-0 w-full'>
+          <Header/>
+        </div>
       </main>
       <div id='webglContainer' className='fixed top-0 left-0 w-full h-full'></div>
-      <div className='absolute w-full h-full top-0 left-0 z-10 bg-black' style={{display:loading?'block':'none'}} >
+      <div className='absolute w-full h-full top-0 left-0 z-10 bg-black' style={{display:loading?'none':'block'}} >
         <Loading2/>
       </div>
       <div className='hidden md:block'>
