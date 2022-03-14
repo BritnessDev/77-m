@@ -17,6 +17,7 @@ const Header = () => {
   }, [])
 
   const followerCursorHidden = () => {
+    if (isMobile) return
     if(typeof window !== "undefined"){
       let cursors = document.getElementsByClassName('cursor')
       if(cursors){
@@ -27,6 +28,7 @@ const Header = () => {
   }
 
   const followerCursorShow = () => {
+    if (isMobile) return
     if(typeof window !== "undefined"){
       let cursors = document.getElementsByClassName('cursor')
       if(cursors){
