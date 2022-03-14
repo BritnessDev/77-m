@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import React, {useEffect, useState} from 'react'
+import { isMobile } from 'react-device-detect'
 import Head from 'next/head'
 import {TweenMax, gsap} from 'gsap'
 import * as THREE from "three"
@@ -141,11 +142,11 @@ const Home: NextPage = () => {
       }
 
       if(order==1){
-        TweenMax.to(details[order], 0.7, {opacity:1, scale:3, ease:'Power0.easeInOut', delay:0.7})
+        TweenMax.to(details[order], 0.7, {opacity:1, scale:isMobile?2:3, ease:'Power0.easeInOut', delay:0.7})
       }else{
         TweenMax.to(details[order], 0.7, {opacity:1, scale:1.3, ease:'Power0.easeInOut', delay:0.7})
         if(orderBefore ==1)
-          TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:order>orderBefore?5:1, ease:'Power0.easeInOut'})
+          TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:isMobile?3:5, ease:'Power0.easeInOut'})
         else
           TweenMax.to(details[orderBefore], 0.7, {opacity:0, scale:order>orderBefore?1.6:1, ease:'Power0.easeInOut'})
       }
@@ -154,7 +155,7 @@ const Home: NextPage = () => {
       if (order>1)
         setTimeout(() => {flag = true}, 1000)
       else
-        setTimeout(() => {flag = false; order++; updateContent()}, 4000)
+        setTimeout(() => {flag = false; order++; updateContent()}, 1000)
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -232,10 +233,10 @@ const Home: NextPage = () => {
           <div className='w-full h-full flex justify-center items-center relative overflow-hidden text-white'>
             <div></div>
             <div className='logo-title flex items-center uppercase'>
-              <div className='text-[90px]'>77</div>
+              <div className='text-[50px] md:text-[90px]'>77</div>
               <div className='ml-2'>
-                <div className='text-right text-[55px] leading-[50px]'>Media</div>
-                <div className='text-right text-[25px] leading-[25px]'>Holding</div>
+                <div className='text-right text-[30px] leading-[25px] md:text-[55px] md:leading-[50px]'>Media</div>
+                <div className='text-right text-[15px] leading-[15px] md:text-[25px] md:leading-[25px]'>Holding</div>
               </div>
             </div>
             
@@ -243,7 +244,7 @@ const Home: NextPage = () => {
               <div className='flex w-full h-full items-center justify-center'>
                 <div className='details relative w-[70vw] h-[60vh] flex justify-start items-end'>
                   <div className='w-full'>
-                    <div className='title text-[30px] font-semibold uppercase pb-10'>Making a Positive Difference with Integrity</div>
+                    <div className='title text-[15px] md:text-[30px] font-semibold uppercase pb-10'>Making a Positive Difference with Integrity</div>
                   </div>
                 </div>
               </div>
@@ -252,9 +253,9 @@ const Home: NextPage = () => {
             <div className='absolute w-full h-full '>
               <div className='flex w-full h-full items-center justify-center'>
                 <div className='details relative w-[70vw] h-[60vh] flex justify-end items-end'>
-                  <div className='w-[40%]'>
-                    <div className='title text-[30px] font-semibold mb-4 uppercase'>Humble Past</div>
-                    <div className='description text-[25px] leading-[25px] text-justify'>
+                  <div className='w-full md:w-[40%]'>
+                    <div className='title text-[15px] md:text-[30px] font-semibold mb-2 md:mb-4 uppercase'>Humble Past</div>
+                    <div className='description text-[10px] leading-[10px] md:text-[25px] md:leading-[25px] text-justify'>
                       Established Feb 22, 2010 with very limited capital, 77 Media started as a 1 man multimedia production house.<br/><br/>
                       Today through the grace of God, 77 Media has become a holding company with 7 subsidiaries in the fields of communication, entertainment, and technology.
                     </div>
@@ -266,9 +267,9 @@ const Home: NextPage = () => {
             <div className='absolute w-full h-full '>
               <div className='flex w-full h-full items-center justify-center'>
                 <div className='details relative w-[70vw] h-[60vh] flex justify-start items-end'>
-                  <div className='w-[40%]'>
-                    <div className='title text-[30px] font-semibold mb-4 uppercase'>Exciting Future</div>
-                    <div className='description text-[25px] leading-[25px] text-justify'>
+                  <div className='w-full md:w-[40%]'>
+                    <div className='title text-[15px] md:text-[30px] font-semibold mb-2 md:mb-4 uppercase'>Exciting Future</div>
+                    <div className='description text-[10px] leading-[10px] md:text-[25px] md:leading-[25px] text-justify'>
                       Our vision is clear, and our ambitions are great. We are always looking for the next revolutionizing investment opportunity.<br/><br/>
                       Whether it is through organic growth of our current businesses or through a drastic pivot, we are eager and ready for any challenge.
                     </div>
