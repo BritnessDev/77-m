@@ -379,7 +379,7 @@ const Home: NextPage = () => {
 
     loaderGLTF.load('models/cube.glb', function (gltf) {
       let geo
-      const _material = new THREE.MeshStandardMaterial( {color: 0x666666, emissive:0x111111, side:THREE.DoubleSide, map:loaderTexture.load('textures/cube_normals1.png'),
+      const _material = new THREE.MeshStandardMaterial( {color: 0x666666, emissive:0x111111, side:THREE.DoubleSide, map:loaderTexture.load('textures/textur3.jpg'),
         roughness:0.8, metalness:0.1, opacity:0.99, transparent:true, 
         bumpMap:loaderTexture.load('textures/floor_mask.jpg'), bumpScale:0.01,
         // displacementMap:loaderTexture.load('textures/floor_mask.jpg'), displacementScale : 0.5
@@ -467,7 +467,7 @@ const Home: NextPage = () => {
       const time = performance.now() * 0.001;
 
       if(cameraFollow){
-        myCube.position.y = Math.sin(time) * 0.4 - 0.5;
+        myCube.position.y = Math.sin(time) * 0.4 - 0.6;
         myCube.rotation.x = time * 0.5;
         myCube.rotation.z = time * 0.53;
         // TweenMax.to(camera.position, 0.05, { x: myCube.position.x, ease: 'Power0.easeInOut',})
@@ -502,14 +502,14 @@ const Home: NextPage = () => {
         TweenMax.to(myCube.position, 0.9, { x: 0, ease: 'Power0.easeInOut', delay: 0.1 })
         TweenMax.to(camera.position, 5, { z: cameraDeltaZ, y:myCube.position.y + cameraDeltaY, ease: 'expo.inOut', delay: 0 })
       }else if (order === 1){
-        TweenMax.to(myCube.position, 1.0, { y: -0.5, ease: 'elastic.out(2.5, 0.6)'})
+        TweenMax.to(myCube.position, 2.0, { y: -0.5, ease: 'elastic.out(2.5, 0.6)'})
         setTimeout(() => { cameraFollow = true }, 200)
       }else if (order === 5){
         cameraFollow = false
-        TweenMax.to(myCube.position, 0.3, { x: 0, y:cameraDeltaY-0.2, ease: 'Power4.easeOut'})
-        TweenMax.to(myCube.rotation, 0.3, { x: 0, y:0, z:0, ease: 'Power4.easeOut'})
-        TweenMax.to(camera.position, 3, { z:myCube.position.z+0.1 , delay:2})
-        setTimeout(() => { Router.push('/company') }, 4000)
+        TweenMax.to(myCube.position, 1, { x: 0, y:cameraDeltaY-0.2, ease: 'Power4.easeOut'})
+        TweenMax.to(myCube.rotation, 1, { x: 0, y:0, z:0, ease: 'Power4.easeOut'})
+        TweenMax.to(camera.position, 3, { z:myCube.position.z+1 , delay:2})
+        setTimeout(() => { Router.push('/company') }, 4500)
       }else{
         TweenMax.to(myCube.position, 0.9, { 
           x: order < 2 ? 0 : (order % 2 == 0) ? offsetValueX : -offsetValueX, 
