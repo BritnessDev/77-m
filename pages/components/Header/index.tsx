@@ -5,17 +5,6 @@ import {isMobile} from 'react-device-detect'
 
 const Header = () => {
 
-  useEffect(() => {
-    if(typeof document !== "undefined"){
-      let logo = document.getElementById('77logo')
-      if(logo){
-        TweenMax.to(logo, 0, {y:-500, scale:1, rotate:360, delay:2});
-        TweenMax.to(logo, 1.5, {ease: 'Power4.easeOut', y:isMobile?70:100, scale:isMobile?1:1.5, delay:2});
-        TweenMax.to(logo, 1, {ease: 'Power4.easeInOut', y:0, scale:1, delay:3.5, rotate:0});
-      }
-    }
-  }, [])
-
   const followerCursorHidden = () => {
     if (isMobile) return
     if(typeof window !== "undefined"){
