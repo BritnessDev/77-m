@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import React, {  useEffect, useState } from 'react'
+import Router from 'next/router'
 import { isMobile } from 'react-device-detect'
 import Head from 'next/head'
 import { TweenMax, gsap } from 'gsap'
@@ -334,7 +335,6 @@ const Home: NextPage = () => {
     container.appendChild(renderer.domElement)
     var viewport = { width: container.clientWidth, height: container.clientHeight, aspectRatio: container.clientWidth / container.clientHeight }
     camera = new THREE.PerspectiveCamera(45, viewport.aspectRatio, 0.1, 10000)
-    camera.position.z = 10
 
     var viewSize = { distance: camera.position.z, vFov: (camera.fov * Math.PI) / 180, height: 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z, width: 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z * viewport.aspectRatio, }
 
@@ -373,19 +373,23 @@ const Home: NextPage = () => {
     water.position.y = -1
     scene.add(water);
 
-    const bgTexture = loaderTexture.load('textures/bg1.jpg')
+    const bgTexture = loaderTexture.load('textures/background1.png')
 
     var myCube = new THREE.Object3D
 
     loaderGLTF.load('models/cube.glb', function (gltf) {
       let geo
-      const _material = new THREE.MeshStandardMaterial( {color: 0x888888, emissive:0x111111, roughness:0.8, metalness:0.1, opacity:0.99, transparent:true, side:THREE.DoubleSide, map:loaderTexture.load('textures/cube_normals.png')} )
+      const _material = new THREE.MeshStandardMaterial( {color: 0x666666, emissive:0x111111, side:THREE.DoubleSide, map:loaderTexture.load('textures/cube_normals1.png'),
+        roughness:0.8, metalness:0.1, opacity:0.99, transparent:true, 
+        bumpMap:loaderTexture.load('textures/floor_mask.jpg'), bumpScale:0.01,
+        // displacementMap:loaderTexture.load('textures/floor_mask.jpg'), displacementScale : 0.5
+       })
       gltf.scene.traverse( function( object ) {
         if ((object instanceof THREE.Mesh)) geo = object.geometry; 
       });
-      console.log('material', _material)
       myCube = new THREE.Mesh(geo, _material)
-      myCube.scale.set(0.4, 0.4, 0.4)
+      const _scale = isMobile?2:0.4
+      myCube.scale.set(_scale, _scale, _scale)
       myCube.position.set(0, -4, 0)
       scene.add(myCube);
     }, undefined, function (error) {
@@ -398,54 +402,54 @@ const Home: NextPage = () => {
       if (progress == 1.0) initContent()
     };
 
-    var bgMaterial = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/1.png') });
-    const bg = new THREE.Mesh(new THREE.PlaneBufferGeometry(190, 100, 10, 1), bgMaterial)
-    bg.position.set(0, 12, -100)
+    var bgMaterial = new THREE.MeshLambertMaterial({ map: bgTexture });
+    const bg = new THREE.Mesh(new THREE.PlaneBufferGeometry(11000, 5500, 10, 1), bgMaterial)
+    bg.position.set(0, 750, -5000)
     scene.add(bg)
-    const logo = new THREE.Object3D
-    scene.add(logo)
-    var logoMaterial1 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Acquaint.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/AcquaintMask.png') });
-    var logoMaterial2 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Antin.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/AntinMask.png') });
-    var logoMaterial3 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Brackets.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/BracketsMask.png') });
-    var logoMaterial4 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/77WideLogo.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/77WideLogo.png') });
-    var logoMaterial5 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Gabriel.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/GabrielMask.png') });
-    var logoMaterial6 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Soul.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/SoulMask.png') });
-    var logoMaterial7 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/VFXStudio.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/VFXStudioMask.png') });
+    {
+      // const logo = new THREE.Object3D
+      // scene.add(logo)
+      // var logoMaterial1 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Acquaint.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/AcquaintMask.png') });
+      // var logoMaterial2 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Antin.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/AntinMask.png') });
+      // var logoMaterial3 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Brackets.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/BracketsMask.png') });
+      // var logoMaterial4 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/77WideLogo.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/77WideLogo.png') });
+      // var logoMaterial5 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Gabriel.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/GabrielMask.png') });
+      // var logoMaterial6 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/Soul.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/SoulMask.png') });
+      // var logoMaterial7 = new THREE.MeshLambertMaterial({ map: loaderTexture.load('textures/logos/VFXStudio.png'), alphaTest: 0.01, alphaMap: loaderTexture.load('textures/logos/VFXStudioMask.png') });
 
-    const logo1 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial1)
-    logo1.position.set(0, 0, 0)
-    logo.add(logo1)
+      // const logo1 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial1)
+      // logo1.position.set(0, 0, 0)
+      // logo.add(logo1)
 
-    const logo2 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial2)
-    logo1.position.set(0, 0, 0)
-    logo.add(logo2)
+      // const logo2 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial2)
+      // logo1.position.set(0, 0, 0)
+      // logo.add(logo2)
 
-    const logo3 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial3)
-    logo1.position.set(0, 0, 0)
-    logo.add(logo3)
+      // const logo3 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial3)
+      // logo1.position.set(0, 0, 0)
+      // logo.add(logo3)
 
-    const logo4 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial6)
-    logo1.position.set(0, 0, 0)
-    logo.add(logo4)
+      // const logo4 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial6)
+      // logo1.position.set(0, 0, 0)
+      // logo.add(logo4)
 
-    const logo5 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial5)
-    logo1.position.set(0, 0, 0)
-    logo.add(logo5)
+      // const logo5 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial5)
+      // logo1.position.set(0, 0, 0)
+      // logo.add(logo5)
 
-    const logo6 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial7)
-    logo1.position.set(0, 0, 0)
-    logo.add(logo6)
+      // const logo6 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial7)
+      // logo1.position.set(0, 0, 0)
+      // logo.add(logo6)
+    }
 
-    // const logo7 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 1.2, 1, 1), logoMaterial4)
-    // logo1.position.set(0, 0, 0)
-    // logo.add(logo7)
-
-    var order = 0, orderBefore = 0
-    const _3D_Y_Offset = 5, _3d_X_Offset = 4
+    var order = -1, orderBefore = 0
+    const cameraDeltaZ = isMobile?100:12, cameraDeltaY = isMobile?5:2
     var touchvalue: number
     var flag = true
     var details = new Array
     var temp
+    var cameraFollow = false
+
     temp = document.querySelector('.main-part > div > div:nth-child(1)'); details.push(temp);
 
     temp = document.querySelector('.main-part > div > div.logo-title:nth-child(2)'); details.push(temp);
@@ -461,18 +465,16 @@ const Home: NextPage = () => {
 
     function animate() {
       const time = performance.now() * 0.001;
-      if (logo) {
-        let l = 6;
-        let center = logo.position
-        for (let i = 0; i < 6; i++) {
-          logo.children[i].position.x = center.x + l * Math.cos(0.15 * time + i * Math.PI / 3)
-          logo.children[i].position.z = center.z + l * Math.sin(0.15 * time + i * Math.PI / 3)
-        }
-      }
 
-      myCube.position.y = Math.sin(time) * 0.3 - 0.7;
-      myCube.rotation.x = time * 0.5;
-      myCube.rotation.z = time * 0.51;
+      if(cameraFollow){
+        myCube.position.y = Math.sin(time) * 0.4 - 0.5;
+        myCube.rotation.x = time * 0.5;
+        myCube.rotation.z = time * 0.53;
+        // TweenMax.to(camera.position, 0.05, { x: myCube.position.x, ease: 'Power0.easeInOut',})
+        TweenMax.to(camera.position, 0.05, { y: myCube.position.y+cameraDeltaY, ease: 'Power0.easeInOut',})
+        TweenMax.to(camera.position, 0.05, { z: myCube.position.z+cameraDeltaZ, ease: 'Power0.easeInOut',})
+
+      }
       let waterMaterial: any = water.material;
       waterMaterial.uniforms['time'].value += 1.0 / 60.0;
       requestAnimationFrame(animate)
@@ -484,36 +486,47 @@ const Home: NextPage = () => {
       setLoading(true)
       flag = false;
       const temp = myCube.position
-      lightPoint.position.set(temp.x - 10, temp.y + 20, temp.z)
-      logo.position.set(0, -5, -1.5)
-      // logo.position.set(-0.5, -0.3, 7)
-      // logo.scale.set(0.2, 0.2, 0.2)
-      myCube.position.y = -5
-      TweenMax.to(myCube.position, 3, { y: -0.5, ease: "elastic.out(1, 0.3)", delay: 0.1 })
-      setTimeout(() => { order++; updateContent() }, 3000)
+      lightPoint.position.set(temp.x - 10, temp.y + 20, temp.z)   
+      camera.position.set(0, 0.5, 1000)
+      myCube.position.y = isMobile?-5:-2
+      setTimeout(() => { order++; updateContent() }, 1000)
     }
 
     function updateContent() {
       console.log(order)
+      const offsetValueX = isMobile?10:4
+      const offsetValueZ = isMobile?20:8
+      const cubeY = myCube.position.y
+      const cubeZ = myCube.position.z
+      if (order === 0){
+        TweenMax.to(myCube.position, 0.9, { x: 0, ease: 'Power0.easeInOut', delay: 0.1 })
+        TweenMax.to(camera.position, 5, { z: cameraDeltaZ, y:myCube.position.y + cameraDeltaY, ease: 'expo.inOut', delay: 0 })
+      }else if (order === 1){
+        TweenMax.to(myCube.position, 1.0, { y: -0.5, ease: 'elastic.out(2.5, 0.6)'})
+        setTimeout(() => { cameraFollow = true }, 200)
+      }else if (order === 5){
+        cameraFollow = false
+        TweenMax.to(myCube.position, 0.3, { x: 0, y:cameraDeltaY-0.2, ease: 'Power4.easeOut'})
+        TweenMax.to(myCube.rotation, 0.3, { x: 0, y:0, z:0, ease: 'Power4.easeOut'})
+        TweenMax.to(camera.position, 3, { z:myCube.position.z+0.1 , delay:2})
+        setTimeout(() => { Router.push('/company') }, 4000)
+      }else{
+        TweenMax.to(myCube.position, 0.9, { 
+          x: order < 2 ? 0 : (order % 2 == 0) ? offsetValueX : -offsetValueX, 
+          z: order>orderBefore? cubeZ - offsetValueZ : cubeZ + offsetValueZ,
+          ease: 'Power0.easeOut', delay: 0.1 
+        })
+      }
 
+      if(order === 2){
+        temp = document.querySelector('.scroll-gif')
+        gsap.to(temp, 0.2, {opacity:1})
+      }else{        
+        temp = document.querySelector('.scroll-gif')
+        gsap.to(temp, 0.1, {opacity:0})
+      }
+        
       const alphaX = myCube.rotation.x
-      if (order === 0)
-        TweenMax.to(myCube.position, 0.7, { x: 0, ease: 'Power0.easeInOut', delay: 0.3 })
-      else
-        TweenMax.to(myCube.position, 0.7, { x: order < 2 ? 0 : (order % 2 == 0) ? 2 : -2, ease: 'Power0.easeInOut', delay: 0.3 })
-
-      if (order > orderBefore) {
-        TweenMax.to(myCube.rotation, 0.7, { x: alphaX - Math.PI, ease: 'Power0.easeInOut', delay: 0.3 })
-      }
-      else {
-        TweenMax.to(myCube.rotation, 0.7, { x: alphaX + Math.PI, ease: 'Power0.easeInOut', delay: 0.3 })
-      }
-
-      if (order == 3) {
-        TweenMax.to(logo.position, 1, { y: 0.8, ease: 'elastic.out(1.2, 0.8)' })
-      } else {
-        TweenMax.to(logo.position, 0.5, { y: -5, ease: 'Power0.easeInOut', delay: 0.3 })
-      }
 
       if (order == 1) {
         TweenMax.to(details[order], 0.7, { opacity: 1, scale: isMobile ? 2 : 3, ease: 'Power0.easeInOut', delay: 0.7 })
@@ -527,9 +540,9 @@ const Home: NextPage = () => {
 
       orderBefore = order
       if (order > 1)
-        setTimeout(() => { flag = true }, 1000)
+        setTimeout(() => { flag = true }, 2000)
       else
-        setTimeout(() => { flag = false; order++; updateContent() }, 4000)
+        setTimeout(() => { flag = false; order++; updateContent() }, 5000)
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -611,7 +624,7 @@ const Home: NextPage = () => {
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/default-favicon.ico" />
       </Head>
-
+      
       <main className={styles.main}>
         <div className='main-part absolute w-full h-full z-10'>
           <div className='w-full h-full flex justify-center items-center relative overflow-hidden text-white'>
@@ -628,7 +641,7 @@ const Home: NextPage = () => {
               <div className='flex w-full h-full items-center justify-center'>
                 <div className='details relative w-[70vw] h-[60vh] flex justify-start items-end'>
                   <div className='w-full'>
-                    <div className='title text-[15px] md:text-[30px] font-semibold uppercase pb-10'>Making a Positive Difference with Integrity</div>
+                    <div className='title text-[15px] md:text-[30px] font-semibold uppercase pb-10'>Making a Positive Difference with Integrity</div>                    
                   </div>
                 </div>
               </div>
@@ -671,6 +684,10 @@ const Home: NextPage = () => {
       <div id='webglContainer' className='fixed top-0 left-0 w-full h-full'></div>
       <div className='absolute w-full h-full top-0 left-0 z-10 bg-black' style={{ display: loading ? 'none' : 'block' }} >
         <Loading2 />
+      </div>
+      <div className='w-full absolute bottom-5 scroll-gif opacity-0'>
+        <img src='images/scroll.gif' className="w-[150px] mx-auto"/>
+        <div className='text-center text-10 -mt-10 text-white'>SCROLL TO EXPLORE</div>
       </div>
       {/* <div className='hidden md:block'>
         <Cursor/>

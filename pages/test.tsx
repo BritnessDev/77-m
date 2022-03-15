@@ -71,7 +71,7 @@ const Home: NextPage = () => {
     //   console.error( error );
     // });
     
-    let planes: THREE.Object3D<THREE.Event>[] | THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];  // just an array we can use to rotate the cubes
+    
     const loadManager = new THREE.LoadingManager();
     const _loader = new THREE.TextureLoader(loadManager);
 
@@ -84,15 +84,15 @@ const Home: NextPage = () => {
     //   new THREE.MeshBasicMaterial({color:0xdddddd, reflectivity:1, refractionRatio :0.98, map: _loader.load('textures/logos/6.png')}),
     // ];
 
-    const planeMaterials = [
-      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m1.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m1.png'), }),
-      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m2.png'), alphaTest:0.05, alphaMap:_loader.load('textures/logos/m2.png'), }),
-      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m3.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m3.png'), }),
-      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m4.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m4m.png'),}),
-      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m5.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m5.png'), }),
-      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m6.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m6.png'), }),
-      new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m7.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m7.png'), }),      
-    ]
+    // const planeMaterials = [
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m1.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m1.png'), }),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m2.png'), alphaTest:0.05, alphaMap:_loader.load('textures/logos/m2.png'), }),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m3.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m3.png'), }),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m4.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m4m.png'),}),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m5.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m5.png'), }),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m6.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m6.png'), }),
+    //   new THREE.MeshBasicMaterial({color:0xdddddd, side:THREE.DoubleSide , map: _loader.load('textures/logos/m7.png'), alphaTest:0.2, alphaMap:_loader.load('textures/logos/m7.png'), }),      
+    // ]
     
     // const progressBarElem = loadingElem.querySelector('.progressbar');
     const floorMaterial = new THREE.MeshStandardMaterial({color:0x222222, emissive:0x111111, side:THREE.DoubleSide, roughness:0, metalness:1.0, metalnessMap: _loader.load('textures/floor_mask.jpg') })
@@ -106,55 +106,20 @@ const Home: NextPage = () => {
       Plane = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000, 1, 1),  floorMaterial )
       Plane.rotateX(Math.PI/2)
       Plane.position.y = -50
-      // scene.add(Plane)
-
-      let PlaneGeo = new THREE.PlaneGeometry(600, 600, 1, 1)
-      Plane = new THREE.Mesh(PlaneGeo, planeMaterials[6])
-      Plane.position.y = 70
-      planes.push(Plane)
-      PlaneGeo = new THREE.PlaneGeometry(200, 200, 1, 1)
-      Plane = new THREE.Mesh(PlaneGeo, planeMaterials[0])
-      Plane.position.set(l*Math.cos(Math.PI/3), -10, -l*Math.sin(Math.PI/3))
-      planes.push(Plane)
-      Plane = new THREE.Mesh(PlaneGeo, planeMaterials[1])
-      Plane.position.set(l*Math.cos(2*Math.PI/3), -10, -l*Math.sin(2*Math.PI/3))
-      planes.push(Plane)
-      Plane = new THREE.Mesh(PlaneGeo, planeMaterials[2])
-      Plane.position.set(l*Math.cos(Math.PI), -10, -l*Math.sin(Math.PI))
-      planes.push(Plane)
-      Plane = new THREE.Mesh(PlaneGeo, planeMaterials[3])
-      Plane.position.set(l*Math.cos(4*Math.PI/3), -10, -l*Math.sin(4*Math.PI/3))
-      planes.push(Plane)
-      Plane = new THREE.Mesh(PlaneGeo, planeMaterials[4])
-      Plane.position.set(l*Math.cos(5*Math.PI/3), -10, -l*Math.sin(5*Math.PI/3))
-      planes.push(Plane)
-      Plane = new THREE.Mesh(PlaneGeo, planeMaterials[5])
-      Plane.position.set(l*Math.cos(2*Math.PI), -10, -l*Math.sin(2*Math.PI))
-      planes.push(Plane)
-      scene.add(planes[0])
-      scene.add(planes[1])
-      scene.add(planes[2])
-      scene.add(planes[3])
-      scene.add(planes[4])
-      scene.add(planes[5])
-      scene.add(planes[6])
+      scene.add(Plane)
     };
 
     loadManager.onProgress = (urlOfLastItemLoaded, itemsLoaded, itemsTotal) => {
       const progress = itemsLoaded / itemsTotal;
       // progressBarElem.style.transform = `scaleX(${progress})`;
     };
+    const loader = new THREE.AnimationLoader();
+
 
     animate();
     function animate() {
       requestAnimationFrame( animate );
-      if(planes.length === 7 ){
-        const timer = - 0.00015 * Date.now();      
-        for(let i = 1; i<7 ;i++){
-          planes[i].position.x = 500 * Math.cos(timer + i * Math.PI/3 );
-          planes[i].position.z = 500 * Math.sin(timer + i * Math.PI/3 );
-        }
-      }
+      
 
       renderer.render( scene, camera );    
     }
@@ -189,18 +154,6 @@ const Home: NextPage = () => {
     }
   }, [])
 
-  useEffect(() => {
-    window.addEventListener("mousemove", (event: { clientX: number; clientY: number }) => {
-      setPosition({x:event.clientX, y:event.clientY})      
-    });
-  }, [])
-
-  useEffect(() => {
-    window.addEventListener('scroll', ()=>{
-      //let scrollPercent = Math.floor(((document.documentElement.scrollTop || document.body.scrollTop) / ((document.documentElement.scrollHeight || document.body.scrollHeight) - document.documentElement.clientHeight)) * 100)      
-    });    
-  },[]); 
-
   
   return (
     <div className={styles.container}>
@@ -209,8 +162,9 @@ const Home: NextPage = () => {
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/default-favicon.ico" />
       </Head>
-  
+
       <div id='webGLRender' className='fixed w-full h-full top-0 left-0 pointer-events-auto z-0'/>
+      <div><img src='images/scroll.gif' width={150}/></div>
   
     </div>
   )
