@@ -471,8 +471,8 @@ const Home: NextPage = () => {
         myCube.rotation.x = time * 0.5;
         myCube.rotation.z = time * 0.53;
         // TweenMax.to(camera.position, 0.05, { x: myCube.position.x, ease: 'Power0.easeInOut',})
-        TweenMax.to(camera.position, 0.05, { y: myCube.position.y+cameraDeltaY, ease: 'Power0.easeInOut',})
-        TweenMax.to(camera.position, 0.05, { z: myCube.position.z+cameraDeltaZ, ease: 'Power0.easeInOut',})
+        TweenMax.to(camera.position, 0.2, { y: myCube.position.y+cameraDeltaY, ease: 'Power0.easeInOut',})
+        TweenMax.to(camera.position, 0.2, { z: myCube.position.z+cameraDeltaZ, ease: 'Power0.easeInOut',})
 
       }
       let waterMaterial: any = water.material;
@@ -500,15 +500,15 @@ const Home: NextPage = () => {
       const cubeZ = myCube.position.z
       if (order === 0){
         TweenMax.to(myCube.position, 0.9, { x: 0, ease: 'Power0.easeInOut', delay: 0.1 })
-        TweenMax.to(camera.position, 5, { z: cameraDeltaZ, y:myCube.position.y + cameraDeltaY, ease: 'expo.inOut', delay: 0 })
+        TweenMax.to(camera.position, 5, { z: cameraDeltaZ, y: cameraDeltaY, ease: 'expo.inOut', delay: 0 })
       }else if (order === 1){
-        TweenMax.to(myCube.position, 2.0, { y: -0.5, ease: 'elastic.out(2.5, 0.6)'})
-        setTimeout(() => { cameraFollow = true }, 200)
+        TweenMax.to(myCube.position, 3.0, { y: -0.6, ease: 'elastic.out(1.5, 0.6)'})
+        setTimeout(() => { cameraFollow = true }, 2800)
       }else if (order === 5){
         cameraFollow = false
         TweenMax.to(myCube.position, 1, { x: 0, y:cameraDeltaY-0.2, ease: 'Power4.easeOut'})
         TweenMax.to(myCube.rotation, 1, { x: 0, y:0, z:0, ease: 'Power4.easeOut'})
-        TweenMax.to(camera.position, 3, { z:myCube.position.z+1 , delay:2})
+        TweenMax.to(camera.position, 3, { z:myCube.position.z+1 , y:cameraDeltaY-0.2, delay:2})
         setTimeout(() => { Router.push('/company') }, 4500)
       }else{
         TweenMax.to(myCube.position, 0.9, { 
