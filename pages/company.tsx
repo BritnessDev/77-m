@@ -6,13 +6,12 @@ import * as THREE from "three"
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 import { TextureLoader } from 'three'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
+import LoadingScene from './components/LoadingScene'
 
 import styles from '../styles/Home.module.scss'
 
-import jsonData from  './motion.json'
-
 const Home: NextPage = () => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [viewport, setViewPort] = useState({width:0, height:0, aspectRatio:1})
   const [viewSize, setViewSize] = useState({distance:3, vFov:0, height:1, width:1})
   const [cursorPos, setPosition] = useState({x:0, y:0})
@@ -20,7 +19,14 @@ const Home: NextPage = () => {
   let camera: any
   let container: any
   let scene = new THREE.Scene()
-  setTimeout(() => {setLoading(false);}, 1000);  
+  setTimeout(() => {
+    if(typeof document !== "undefined"){
+      const target1 = document.getElementById('loadingRender')
+      gsap.to(target1, 2, {opacity:0})
+      const target2 = document.getElementById('content')
+      gsap.to(target2, 2, {opacity:1})
+    }
+  }, 4000);  
   const webGLRender = () => {
     container = document.getElementById('webGLRender')
     const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true });
@@ -42,30 +48,22 @@ const Home: NextPage = () => {
     animate();
     function animate() {
       requestAnimationFrame( animate );
-      renderer.render( scene, camera );    
+      renderer.render( scene, camera );
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
     window.addEventListener( 'resize', onWindowResize )
-    function onWindowResize() {      
-      const viewport = {
-        width : container.clientWidth, height : container.clientHeight,
-        aspectRatio : container.clientWidth / container.clientHeight
-      }
+    function onWindowResize() {    
+      container = document.getElementById('webGLRender')
+      if(container){
       
-      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       
-      const viewSize = {
-        distance : camera.position.z,
-        vFov : (camera.fov * Math.PI) / 180,
-        height : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z,
-        width : 2 * Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.position.z * viewport.aspectRatio,
       }
-      
       setViewPort(viewport)
       setViewSize(viewSize)
-      renderer.setSize( window.innerWidth, window.innerHeight );
+      renderer.setSize( container.clientWidth , container.clientHeight );
     }
   }
 
@@ -75,7 +73,7 @@ const Home: NextPage = () => {
     }
   }, [])
 
-  
+    
   return (
     <div className={styles.container}>
       <Head>
@@ -84,7 +82,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/default-favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className='w-full h-full text-[90px] text-white text-center'>
+      
+        <div id='loadingRender' className='absolute top-0 left-0 w-full h-[100vh] z-10' style={{opacity:1}}>
+          <LoadingScene/>
+        </div>
+        <div id='content' className='w-full h-full text-[90px] text-white text-center' style={{opacity:0}}>
           <div>
             Company page
           </div>
