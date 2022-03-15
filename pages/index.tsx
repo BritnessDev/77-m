@@ -7,23 +7,10 @@ import * as THREE from "three"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import styles from '../styles/Home.module.scss'
-import Cursor from './components/Cursor'
+// import Cursor from './components/Cursor'
 import Loading2 from './components/Loading2'
 import Header from './components/Header'
-import {
-  Color,
-  FrontSide,
-  Matrix4,
-  Mesh,
-  PerspectiveCamera,
-  Plane,
-  ShaderMaterial,
-  UniformsLib,
-  UniformsUtils,
-  Vector3,
-  Vector4,
-  WebGLRenderTarget
-} from 'three';
+import {  Color,  FrontSide,  Matrix4,  Mesh,  PerspectiveCamera,  Plane,  ShaderMaterial,  UniformsLib,  UniformsUtils,  Vector3, Vector4, WebGLRenderTarget} from 'three';
 
 // import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 // import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
@@ -374,18 +361,14 @@ const Home: NextPage = () => {
       {
         textureWidth: 512,
         textureHeight: 512,
-        waterNormals: new THREE.TextureLoader().load('textures/waternormals.jpg', function (texture) {
-
-          texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
-        }),
+        waterNormals: new THREE.TextureLoader().load('textures/waternormals.jpg', function (texture) {texture.wrapS = texture.wrapT = THREE.RepeatWrapping;}),
         sunDirection: new THREE.Vector3(),
         sunColor: 0xffffff,
         waterColor: 0x001e0f,
         distortionScale: 3.7,
         fog: scene.fog !== undefined
-      }
-    );
+      });
+
     water.rotation.x = - Math.PI / 2;
     water.position.y = -1
     scene.add(water);
@@ -393,9 +376,16 @@ const Home: NextPage = () => {
     const bgTexture = loaderTexture.load('textures/bg1.jpg')
 
     var myCube = new THREE.Object3D
-    loaderGLTF.load('models/tesseract_cube/scene.gltf', function (gltf) {
-      myCube = gltf.scene.children[0]
-      myCube.scale.set(0.005, 0.005, 0.005)
+
+    loaderGLTF.load('models/cube.glb', function (gltf) {
+      let geo
+      const _material = new THREE.MeshStandardMaterial( {color: 0x888888, emissive:0x111111, roughness:0.8, metalness:0.1, opacity:0.99, transparent:true, side:THREE.DoubleSide, map:loaderTexture.load('textures/cube_normals.png')} )
+      gltf.scene.traverse( function( object ) {
+        if ((object instanceof THREE.Mesh)) geo = object.geometry; 
+      });
+      console.log('material', _material)
+      myCube = new THREE.Mesh(geo, _material)
+      myCube.scale.set(0.4, 0.4, 0.4)
       myCube.position.set(0, -4, 0)
       scene.add(myCube);
     }, undefined, function (error) {
@@ -491,7 +481,7 @@ const Home: NextPage = () => {
 
     function initContent() {
       animate()
-      // setLoading(true)
+      setLoading(true)
       flag = false;
       const temp = myCube.position
       lightPoint.position.set(temp.x - 10, temp.y + 20, temp.z)
