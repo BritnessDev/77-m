@@ -5,9 +5,11 @@ import {TweenMax, gsap} from 'gsap'
 import * as THREE from "three"
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 import { TextureLoader } from 'three'
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 
 import styles from '../styles/Home.module.scss'
+
+import jsonData from  './motion.json'
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(true)
@@ -17,7 +19,7 @@ const Home: NextPage = () => {
   let mouse = new THREE.Vector2() 
   let camera: any
   let container: any
-  const scene = new THREE.Scene()
+  let scene = new THREE.Scene()
   setTimeout(() => {setLoading(false);}, 1000);  
   const webGLRender = () => {
     container = document.getElementById('webGLRender')
@@ -36,16 +38,6 @@ const Home: NextPage = () => {
     renderer.setClearColor('#000000', 0.1)
     renderer.setSize(viewport.width, viewport.height)
     renderer.setPixelRatio(window.devicePixelRatio)
-    
-    const loadManager = new THREE.LoadingManager();
-    const _loader = new THREE.TextureLoader(loadManager);
-        
-    loadManager.onLoad = () => {
-    };
-
-    loadManager.onProgress = (urlOfLastItemLoaded, itemsLoaded, itemsTotal) => {
-      const progress = itemsLoaded / itemsTotal;    
-    };
     
     animate();
     function animate() {

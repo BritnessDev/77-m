@@ -686,7 +686,7 @@ const Home: NextPage = () => {
         <Loading2 />
       </div>
       <div className='w-full absolute bottom-5 scroll-gif opacity-0'>
-        <img src='images/scroll.gif' className="w-[150px] mx-auto"/>
+        <img src='./images/_scroll.gif' className="w-[150px] mx-auto"/>
         <div className='text-center text-10 -mt-10 text-white'>SCROLL TO EXPLORE</div>
       </div>
       {/* <div className='hidden md:block'>
